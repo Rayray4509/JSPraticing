@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        
+        <style>
+            body {
+                margin: 0;
+                background-color: #eee;
+
+            }
+            .word{
+             position: absolute;
+             width: 500;
+             height: 500;
+             background-color: gray;
+            }
+            
+            #player {
+                position: absolute;
+                width: 60px;
+                height: 70px;
+                background-image: url(_3D_Ren_0110_2_.png);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-color: #ad1414;
+            }
+            .food {
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                background-image: url(BADGE.png);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-color: #2196f3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="word"></div>
+        <div id="player"></div>
+        <script>
+            /*需求
+                建立5個div元素且class是food
+            */
+            let foods = [];
+            function createFoods() {
+                for (let i = 0; i < 5; i++) {
+                    foods.push({
+                        x: 0,
+                        y: 0,
+                        width: 50,
+                        height: 50,
+                    });
+                }
+            }
+            function randomXY() {
+                for (let i = 0; i < 5; i++) {
+                    foods[i].x = Math.floor(Math.random() * (window.innerWidth + 1 - foods[i].width));
+                    foods[i].y = Math.floor(Math.random() * (window.innerHeight + 1 - foods[i].height));
+                }
+            }
+
+            let elFoods = [];
+            function createElFoods() {
+                for (let i = 0; i < 5; i++) {
+                    let div = document.createElement("div");
+                    div.classList.add("food");                   
+                    document.body.appendChild(div);                  
+                    elFoods.push(div);
+                }
+            }
+            function renderFoods() {
+                for (let i = 0; i < 5; i++) {
+                    elFoods[i].style.left = foods[i].x + 'px';
+                    elFoods[i].style.top = foods[i].y + 'px';
+
+                }
+            }
+
+            //執行
+            createFoods();
+            randomXY();
+            createElFoods();
+            renderFoods();
+            console.log(elFoods);
+            console.log(foods);
+            document.addEventListener('keydown',function (e) {
+                if(e.code === 'Space'){
+                    randomXY();
+                    console.log(foods[0]);
+                }
+                if(e.code === 'Enter'){
+                    renderFoods();
+                }
+            });
+        </script>
+    </body>
+</html>

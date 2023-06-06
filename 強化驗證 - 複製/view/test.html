@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+            const regularExpressions = {
+        email:/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g,
+        //email RFC格式改進
+        password: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%&*]{6,20}$/
+        //最少 6 個字符最最多20個字元，至少 1 個大寫字母 1小寫字母、1 個數字和 1 個特殊字符：
+    }
+
+
+     const reTest = (type,str)=>{
+        if(typeof str === "string" && type === "email" ) return regularExpressions.email.test(str);
+        if(typeof str === "string" && type === "password" ) return regularExpressions.password.test(str);
+    }
+    console.log(reTest("password","dsRay556788"));
+    const register = ()=>{
+            fetch('http://192.168.50.76:3000/crossTest',{
+                    method: "POST",
+                    body:JSON.stringify(
+                            {   
+                                "name":`DFDF`,
+                            })  
+                        
+                })
+            }
+            register()
+    
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .btn { 
+            background-color: powderblue;
+            color: black;
+            padding: 15px 32px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let temperatureData = []
+        let data = {
+    
+            location:[],
+            temperatureTime:[],
+            temperature:[],
+
+        }
+        function upDateFetch(){
+        let wheather = fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-089?Authorization=CWB-44921482-9B2A-4188-BF0B-103ABE68BEA6&limit=10&locationName=${locationNameUrl}`).then(response=> response.json())
+
+            wheather .then((myJson)=> {
+               // console.log(myJson.records.locations[0].location[0].weatherElement[6].time[1].elementValue[key].value)
+                console.log(myJson);  
+                let locationName = myJson.records.locations[0].location[0].locationName;
+                let temperature = myJson.records.locations[0].location[0].weatherElement[3]
+                let temperatureList = temperature.time;                
+                temperatureList.forEach((value,key) => {
+                    let location = locationName;
+                    let temperatureTime = temperature.time[key].dataTime;
+                    let tempture = temperature.time[key].elementValue[0].value;
+                    updateDateData(location,temperatureTime,tempture,key);
+                });
+                updateAll() 
+            });
+        }
+        function updateDateData(location,temperatureTime,tempture,key) {
+            let data = [location,temperatureTime,tempture]
+            temperatureData[key] = data ;
+        }
+        function updateDateDataArrangement(){
+            temperatureData.forEach((value,key)=>{
+                data.location[key] = value[0];
+                data.temperatureTime[key] = value[1];
+                data.temperature[key] = value[2]; 
+                console.log(value[0]);     
+            })
+        }
+        function createElement(Data,list) {
+            Data.forEach((value,key)=>{
+                let div = document.createElement("div");
+                list[key] = div;
+            })
+        }
+        function removeElement() {
+            if (ellist.length===0)return;
+            ellist.forEach((el)=>{
+                el.remove();
+            });
+        }
+        function showElement(list) {
+            list.forEach((el)=>{
+            document.body.appendChild(el);
+            })   
+        }
+        function doInnerText() {
+            temperatureData.forEach((value,key)=>{
+            ellist[key].innerText = `地點${data.location[key]}/時間${data.temperatureTime[key]}/溫度${data.temperature[key]}`;
+            })   
+        }
+        let ellist = []
+        function updateAll(){
+            removeElement();
+            updateDateDataArrangement();
+            createElement(temperatureData,ellist);
+            doInnerText();
+            showElement(ellist);
+        }
+        let locationName = ["高雄市","臺南市","嘉義市"]
+        let locationEllist = [];
+        function createLocationNameBtn(){
+            createElement(locationName,locationEllist);
+            locationName.forEach((value,key)=>{
+                locationEllist[key].innerText = `${value}`;
+                locationEllist[key].setAttribute("class","btn")
+            })
+            showElement(locationEllist)   
+        }
+        let locationNameUrl = false
+        
+        function locationNameChange(key){
+            locationNameUrl = encodeURI(locationName[key]);
+        }
+
+        createLocationNameBtn();
+        locationEllist.forEach((value,key)=>{
+            locationEllist[key].addEventListener("click",function(){
+            locationNameChange(key);
+            upDateFetch();
+            })
+        })
+        //Promise.all();
+        
+
+    </script>
+    
+</body>
+</html>

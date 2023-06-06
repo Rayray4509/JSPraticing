@@ -1,0 +1,114 @@
+{
+  "success": "true",
+  "result": {
+    "resource_id": "O-A0005-001",
+    "fields": [
+      {
+        "id": "elementName",
+        "type": "String"
+      },
+      {
+        "id": "dataTime",
+        "type": "Date"
+      },
+      {
+        "id": "locationCode",
+        "type": "Integer"
+      },
+      {
+        "id": "value",
+        "type": "Float"
+      }
+    ]
+  },
+  "records": {
+    "weatherElement": {
+      "elementName": "氣象站每日紫外線指數最大值",
+      "time": {
+        "dataTime": "2022/07/28"
+      },
+      "location": [
+        {
+          "locationCode": "467480",
+          "value": 10.38
+        },
+        {
+          "locationCode": "467490",
+          "value": 6.99
+        },
+        {
+          "locationCode": "467350",
+          "value": 10.63
+        },
+        {
+          "locationCode": "467080",
+          "value": 11.46
+        },
+        {
+          "locationCode": "467110",
+          "value": 9.7
+        },
+        {
+          "locationCode": "467650",
+          "value": 11.81
+        },
+        {
+          "locationCode": "467660",
+          "value": 12.86
+        },
+        {
+          "locationCode": "467620",
+          "value": 14
+        },
+        {
+          "locationCode": "467050",
+          "value": 11.51
+        },
+        {
+          "locationCode": "466940",
+          "value": 11.31
+        },
+        {
+          "locationCode": "467610",
+          "value": 14.22
+        },
+        {
+          "locationCode": "466920",
+          "value": 11.89
+        },
+        {
+          "locationCode": "467590",
+          "value": 11.32
+        },
+        {
+          "locationCode": "466910",
+          "value": 7.35
+        },
+        {
+          "locationCode": "467570",
+          "value": 10.7
+        },
+        {
+          "locationCode": "467410",
+          "value": 12.64
+        },
+        {
+          "locationCode": "467550",
+          "value": 14.29
+        },
+        {
+          "locationCode": "467440",
+          "value": 12.04
+        },
+        {
+          "locationCode": "467990",
+          "value": 11.19
+        },
+        {
+          "locationCode": "466990",
+          "value": 12.94
+        }
+      ]
+    }
+  }
+}

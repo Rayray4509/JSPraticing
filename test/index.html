@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-size: 1.2rem;
+            margin: 0;
+            padding: 10px;
+            background-color: #ccc;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .nowTime,
+        .location {
+            line-height: 2rem;
+            color: #fff;
+            padding: 2px 10px;
+            background-color: #302929;
+            border-bottom: solid 1px #281a1a;
+        }
+        .nowTime{
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .temp {
+            color: #fff;
+            padding: 2px 10px;
+            border-bottom: solid 1px transparent;
+        }
+        .centigrade {
+            text-align: right;
+        }
+        .description {
+            opacity: 0;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .description.open {
+            opacity: 1;
+        }
+        .temp:last-child {
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="nowTime"></div>
+        <div class="location"></div>
+        <div class="tempList"></div>
+    </div>
+
+    <script>
+        //工具(tool)//////////////////////////////////
+        function createEl(className) {
+            let el = document.createElement('div');
+            el.classList.add(className);
+            return el;
+        }
+
+
+        //資料層(Model)///////////////////////////////
+        let data = {
+            nowTime:false,
+            country:false,
+            location:false,
+            tempList:[
+                // [時間,溫度,說明],
+            ],
+        };
+        function setData(res) {
+            console.log(res);
+            data.country = res.records.locations[0].locationsName;
+            data.location = res.records.locations[0].location[0].locationName;
+            let temps = res.records.locations[0].location[0].weatherElement[3].time;
+            temps.forEach((temp,key) => {
+                data.tempList.push([
+                    temp.dataTime,
+                    temp.elementValue[0].value,
+                    res.records.locations[0].location[0].weatherElement[6].time[key].elementValue[0].value
+                ]);
+            });
+        }
+        //顯示層(View)////////////////////////////////
+        let elNowTime = document.querySelector('.nowTime');
+        function setElNowTime() {
+            data.nowTime = new Date().toLocaleString();
+            elNowTime.innerText = `現在時間${data.nowTime}`;
+        }
+        let elLocation = document.querySelector('.location');
+        function setElLocation() {
+            elLocation.innerText = `所在位置 ${data.country} ${data.location}`;
+        }
+        let elTempList = document.querySelector('.tempList');
+        function setElTempList() {
+            data.tempList.forEach((temp,key)=>{
+                //temp = [時間,溫度,說明]
+                let elTemp = createEl('temp');
+                let elTime = createEl('time');
+                let elC = createEl('centigrade');
+                let elD = createEl('description');
+                //顏色計算給css
+                let count = temp[1] - 30;
+                elTemp.style.backgroundColor = `hsl(0deg 62% ${30+(count*4)}%)`;
+                elTemp.style.borderColor = `hsl(0deg 62% ${26+(count*4)}%)`;
+                elTime.innerText = temp[0];
+                elC.innerText = temp[1]+'度';
+                elD.innerText = temp[2];
+                //監聽
+                elTemp.addEventListener('click',(e)=>{
+                    elD.classList.toggle('open');
+                });
+                //入畫面
+                elTemp.appendChild(elTime);
+                elTemp.appendChild(elD);
+                elTemp.appendChild(elC);
+                elTempList.appendChild(elTemp);
+            });
+        }
+
+
+        //執行控制(Controller)////////////////////////
+        setElNowTime();
+        setInterval(setElNowTime, 500);
+
+        fetch('F-D0047-089.json').then(res=>res.json())
+        .then((res)=>{
+            setData(res);
+        })
+        .then(()=>{
+            setElLocation();
+            setElTempList();
+        });
+
+
+
+    </script>
+</body>
+
+</html>

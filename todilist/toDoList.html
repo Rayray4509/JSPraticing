@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style> 
+        body {
+            margin: 0;
+            min-width: 250px;
+        }
+        #myInput {
+            margin: 0;
+            border: none;
+            border-radius: 5px;
+            width: 50%;
+            padding: 10px;
+            font-size: 16px;
+            font-family:Arial,Helvetica,sans-serif;
+        }
+        .header {
+            background-color: #009070;
+            padding: 30px 40px;
+            color: white;
+            text-align: center;
+            font-family:Arial,Helvetica,sans-serif;
+        }
+        .addBtn {
+            padding-top: 13px;
+            padding-right: 50px;
+            padding-bottom: 13px;
+            padding-left: 50px;
+            width: 25%;
+            margin-left: 5px;
+            background: #3a6861;;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-family:Arial,Helvetica,sans-serif;
+        }
+        .listWorld{
+            margin: 0;
+            padding: 0;
+        }
+        .list {
+        cursor: pointer;
+        position: relative;
+        padding: 12px 8px 12px 40px;
+        list-style-type: none;
+        background: #eee;
+        font-size: 18px;
+        border-radius: 5px;
+        font-family:Arial,Helvetica,sans-serif;
+        }
+        .closeBtn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 12px 16px 12px 16px;
+        transition: all,0.5s;
+        font-family:Arial,Helvetica,sans-serif;
+        }
+        .closeBtn:hover {
+        background-color: #f44336;
+        transform: rotate(180deg);
+        color: white;
+        font-family:Arial,Helvetica,sans-serif;
+        border-radius: 8px;
+        }
+        .checked {
+            background: #888;
+            color: #fff;
+            text-decoration: line-through;
+        }
+        .storeBtn {
+            padding-top: 13px;
+            padding-right: 50px;
+            padding-bottom: 13px;
+            padding-left: 50px;
+            width: 25%;
+            margin-left: 5px;
+            background: #3a6861;;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-family:Arial,Helvetica,sans-serif;
+        }
+    
+    </style>
+</head>
+<body>
+    <script>
+        let listData = [];
+        let listDataStay = [];
+        let listEl =[];
+        let closeBtnEl = [];
+        let textValue = [];
+        let listDataLocal = [];
+
+        function createHead(){
+            let div = document.createElement("div");
+            div.classList.add("header");
+            document.body.appendChild(div);
+        }
+        function createInput(){
+            let input = document.createElement("input");
+            input.type = "text" ;
+            input.id = "myInput";
+            input.placeholder = "請輸入待辦事項";
+            document.querySelector(".header").appendChild(input);
+        }
+        function createAddBtn(){
+            let node = document.body.querySelector(".header");
+            let span = document.createElement("span");
+            span.classList.add("addBtn");
+            span.textContent= "確定"
+            node.appendChild(span);
+        }
+        let listWorld = false
+        function createListWorld(){
+            world = document.createElement("div");
+            world.classList.add("listWorld")
+            document.body.appendChild(world);
+            listWorld = world;
+        }
+        function createList(){
+            let value = document.getElementById("myInput").value;
+            let li = document.createElement("li");
+            textValue.push(value);
+            let data = {state:false,text:value}
+            listData.push(data);
+            listDataStay.push(data);
+            listEl.push(li);
+            li.innerText = value;
+            li.classList.add("list");
+            listWorld.appendChild(li);
+            createCloseBtn(li)
+            delList(data)
+        }
+        function createCloseBtn(el){
+            let closeBtn = document.createElement("span")
+            closeBtn.classList.add("closeBtn");
+            closeBtn.textContent= "x"
+            closeBtnEl.push(closeBtn);
+            el.appendChild(closeBtn);
+        }
+        // function checkList(){    
+        //     let num = listData.length-1
+        //     listEl[num].addEventListener("click",()=>{
+        //         if(listData[num] === undefined ) return;
+        //         else if(listData[num].state === false){
+        //             listEl[num].classList.add("checked");
+        //             listData[num].state = true;
+        //         }
+        //         else if(listData[num].state === true){
+        //             listEl[num].classList.remove("checked");
+        //             listData[num].state = false;
+        //         }
+        //     })
+        // }
+        
+        function delList(data) {   
+            let num = closeBtnEl.length-1
+            closeBtnEl[num].addEventListener("click",()=>{
+                listData.forEach((v,i)=>{
+                console.log(listDataStay[data]);
+                    if(v === data){
+                        listData.splice(i,1)
+                    }
+                })
+                console.log(listData);
+                listEl[num].remove();
+                //storeData();
+            })
+        };
+        // function storeData(){
+        //         let value = JSON.stringify(listData)
+        //         localStorage.setItem(`data`, `${value}`);
+        // }
+        // function getStoreData(){
+        //     let userData = localStorage.getItem(`data`);
+        //     listDataLocal = JSON.parse(userData)
+        // }
+        // function updateList(){
+        //     listData.forEach((v,i)=>{
+        //         createList()
+        //     })
+        // }
+        // function openCreateList(){
+        //     for(let i in listDataLocal){
+        //         listData.push(listDataLocal[i])
+        //         listDataStay.push(listDataLocal[i])
+        //         let li = document.createElement("li");
+        //         listEl.push(li);
+        //         li.innerText = listData[i].text;
+        //         textValue[i] = listData[i].text;
+        //         li.classList.add("list");
+        //         listWorld.appendChild(li);
+        //         createCloseBtn(li)
+        //         checkList()
+        //     }   
+        // }
+        // function openToDoList(){
+        //     if(listData.length == 0){
+        //         if(localStorage.getItem(`data`)==null)return;
+        //         getStoreData();
+        //         updateList();
+        //         openCreateList();
+        //     }
+        // }
+
+        createHead()
+        createInput()
+        createAddBtn()
+        createListWorld()
+       // openToDoList()
+
+        document.querySelector(".addBtn").addEventListener("click",()=>{
+            if(document.getElementById("myInput").value === "")return;
+            createList();
+           // checkList();
+          //  storeData();
+            document.getElementById("myInput").value = "";
+        });
+
+        
+      
+        
+        
+
+
+
+
+
+
+        
+
+        
+    
+       
+        
+
+        
+      
+
+    
+    </script>
+    
+</body>
+</html>

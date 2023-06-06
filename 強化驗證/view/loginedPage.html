@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .logBtn {
+            padding-top: 13px;
+            padding-right: 50px;
+            padding-bottom: 13px;
+            padding-left: 50px;
+            width: 25%;
+            margin-left: 5px;
+            background: #71a49c;;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-family:Arial,Helvetica,sans-serif;
+        }
+        .logBtn:hover {
+        background-color: #245d48;
+        color: white;
+        font-family:Arial,Helvetica,sans-serif;
+        border-radius: 8px;
+        }
+
+        .addBtn {
+            padding-top: 13px;
+            padding-right: 50px;
+            padding-bottom: 13px;
+            padding-left: 50px;
+            width: 25%;
+            margin-left: 5px;
+            background: #71a49c;;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-family:Arial,Helvetica,sans-serif;
+        }
+        .addBtn:hover {
+        background-color: #245d48;
+        color: white;
+        font-family:Arial,Helvetica,sans-serif;
+        border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div><font face="Arial"><font size="8"><font color="#000000">░░░░░░░░▄░░░░░░░░░░░░░░▄</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">░░░░░░░░▌▒█░░░░░░░░░░░▄▀▒▌</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">░░░░░░░░▌▒▒█░░░░░░░░▄▀▒▒▒▐</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">░░░░░░░▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">░░░░░▄▄▀▒░▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">░░░▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">░░▐▒▒▒▄▄▒▒▒▒░░░▒▒▒▒▒▒▒▀▄▒▒▌</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">░░▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">░▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">░▌░▒▄██▄▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌</font></font></font></div>
+    <div><font face="Arial"><font size="8"><font color="#000000">▀▒▀▐▄█▄█▌▄░▀▒▒░░░░░░░░░░▒▒▒</font></font></font></div>
+    <script>
+        const logout = ()=>{
+            return fetch('/api/logout',{
+                    method: "GET",
+                    headers: {"Content-Type": "application/json"}
+                }).then(res=>{window.location.href = res.url;})
+        }
+
+
+        function createLogoutBtn(){
+                    let div = document.createElement("div");
+                    div.classList.add("logBtn");
+                    div.textContent= "登出"
+                    document.body.appendChild(div);
+                }
+
+
+        createLogoutBtn()
+        document.querySelector('.logBtn').addEventListener("click",()=>{
+            logout();
+        })
+        
+ 
+
+
+
+
+
+
+
+
+
+
+    </script>
+  
+
+</body>
+</html>

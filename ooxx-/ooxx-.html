@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            background-color: #090d29;
+            text-align: center;
+        }
+        .gameArea {
+            display: flex;
+            flex-wrap: wrap;
+            width: 300px;
+            margin: auto;
+            margin-top: calc(50vh - 150px);
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .col {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 90px;
+            height: 90px;
+            line-height: 90px;
+            margin: 5px;
+            font-size: 3rem;
+            color: #ccc;
+            background: linear-gradient(135deg, #202751 0%,#121a41 100%);
+            box-shadow: 5px 5px 20px #03051887;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .col::before {
+            content: '';
+            display: block;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 60%;
+            transform: scale(1.2);
+            opacity: 0.5;
+        }
+
+        .col.apple::before {
+            background-image: url(apple.png);
+            transition: all 0.5s;
+            transform: scale(1);
+            opacity: 1;
+        }
+        .col.banana::before {
+            background-image: url(banana.png);
+            transition: all 0.5s;
+            transform: scale(1);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="gameArea">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <script>
+
+        let OOXX = {
+            div:false,
+            initData:{},
+            players:false,
+            _playerstate:false,
+            _playersData:{},
+            el:false,
+            mainKey:0,
+            nowPlayer:false,
+            latticeCount:9,
+            usedlattice:[],
+            computerNum:false,
+            setNewPlayer(name){
+                if(!name) return;
+                this.players = name;
+            },
+            initPlayerState(){
+                for(let i in this.players){
+                    this.initData={}
+                    this.initData.state= this._playerstate
+                    this.initData.latticeState= this._playerstate
+                    this._playersData[this.players[i]] = this.initData ;
+                    this._playersData[this.players[i]].latticeState = 
+                    [false,false,false,
+                     false,false,false,
+                     false,false,false,
+                    ]
+                }
+                this._playersData[this.players[0]].state= true;        
+            },
+            connectted(){                
+                let player = this.players[this.mainKey];
+                let hold = this._playersData[this.players[this.mainKey]].latticeState;
+                if(hold[0]&&hold[1]&&hold[2]===true){console.log(player+":Win");return true;}
+                if(hold[3]&&hold[4]&&hold[5]===true){console.log(player+":Win");return true;}
+                if(hold[6]&&hold[7]&&hold[8]===true){console.log(player+":Win");return true;}
+                if(hold[0]&&hold[3]&&hold[6]===true){console.log(player+":Win");return true;}
+                if(hold[1]&&hold[4]&&hold[7]===true){console.log(player+":Win");return true;}
+                if(hold[2]&&hold[5]&&hold[8]===true){console.log(player+":Win");return true;}
+                if(hold[0]&&hold[4]&&hold[8]===true){console.log(player+":Win");return true;}
+                if(hold[2]&&hold[4]&&hold[6]===true){console.log(player+":Win");return true;}
+                if(this.latticeCount===0){console.log("平手");return true;}
+            },
+            switch(){
+                if(this.connectted()===true)return;
+                this.mainKey++;
+                if (this.mainKey === (this.players.length)) this.mainKey = 0;
+                for(let i in this.players){
+                    this._playersData[this.players[i]].state = this._playerstate ; 
+                }
+                this._playersData[this.players[this.mainKey]].state = true;      
+            },
+            oxInner(){      
+                let main = this._playersData[this.players[this.mainKey]].state;
+                this.div = document.querySelectorAll(".col");
+                let hold = this._playersData[this.players[this.mainKey]].latticeState;
+                for(let i = 0 ;i<9;i++){
+                    this.div[i].addEventListener("click",()=>{
+                        if (main===true&&this.players[this.mainKey]===`${this.players[0]}`&&hold[i]!=true){
+                            this.div[i].classList.add("apple");
+                            hold[i]=true;
+                            this.usedlattice.push(i);
+                            this.latticeCount--;
+                            this.switch();              
+                        }
+                        if (main===true&&this.players[this.mainKey]===`${this.players[1]}`&&hold[i]!=true){
+                            this.rrr();
+                            this.div[this.computerNum].classList.add("banana");
+                            this._playersData[this.players[this.mainKey]].latticeState[this.computerNum]=true;
+                            this.latticeCount--;
+                            this.switch();                                 
+                        }         
+                       })
+                } 
+                 
+            },
+            
+            randomNumber() {
+                return Math.floor(Math.random() * 9);
+            },
+            random(){
+                let counter=0; 
+                this.computerNum  = this.randomNumber();
+                for (let i in this.usedlattice){
+                    if(this.computerNum  === this.usedlattice[i]){   
+                        
+                    }else counter++;      
+                }
+                if ( counter === this.usedlattice.length )return true;
+                
+            },
+            rrr(){
+                if(this.random()===true){  
+                this.usedlattice.push(this.computerNum);
+                }else this.rrr();
+            }
+        } 
+        
+        
+                
+                
+            
+         
+        OOXX.setNewPlayer(["大毛","小毛"])
+        OOXX.initPlayerState()
+        OOXX.oxInner()
+        
+        
+       
+        
+        
+    
+
+
+        // let player = false
+        // function oxChange(){
+        //     if(player===true)player = false;
+        //     else player = true;
+        // }
+        // function oxInner(event){
+        // if (player===true){
+        //     event.path[0].innerText = "O";
+        //     player=false;
+        // }else{ 
+        //     event.path[0].innerText = "X";
+        //     player=true;
+        // }
+        // console.log(event);
+        // }  
+        // document.addEventListener("click",oxInner);
+       
+        
+
+    
+    
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id = "action">啟動</div>
+    <script>
+        
+        let fruits = ["西瓜","草莓","香蕉","水蜜桃","流連",];
+        let newe = [] 
+        let all = []
+        function getRandomElement(ra){
+             return(Math.floor(Math.random() * ra.length));  
+         };
+             function getRandomArray(){
+
+              for(let i=0;i<3;i++) { 
+                 raf = fruits[getRandomElement(fruits)];
+                 all.push(raf+i);
+                 }
+             newe.push(all);
+             console.log(newe);
+              all = []}
+
+              
+              let action = document.querySelector('#action');
+              action.addEventListener('click', getRandomArray);
+
+                 //function touch() {getRandomArray(3);
+  
+                
+              
+
+               
+         
+          
+          
+        // for(let fruit of fruits){
+        //     if(fruit === stop){
+        //          continue;                              
+        //      }
+        //     console.log(fruit)
+
+        // }
+
+        // for(i=0; i<fruits.length; i++){
+            
+        //     if(fruits[i]=== stop){
+        //         continue;                              
+        //     }
+            
+        //     console.log(fruits[i]);
+
+        // }
+        // console.log(typeof(stop))
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+    
+</body>
+</html>

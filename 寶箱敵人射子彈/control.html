@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            perspective: 1500px;
+        }
+        .lattice{
+            transform-style: preserve-3d;
+            width: 50px;
+            height: 50px;
+            background-color: bisque;
+            position:absolute;
+           
+            border-color: black;
+        }
+        .player {
+            position: absolute;
+            background-image: url(wa.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 50px;
+            height: 50px;
+            transition: all 1s;
+            transform: translateZ(25px) rotateX(-70deg) 
+        }
+        .world{
+            
+            transform-style: preserve-3d;
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+            position: relative;
+            transform: translateY(200px) translateX(70px) rotateX(70deg) 
+             
+        }
+        .box{
+            width:50px;
+            height:50px;
+            background-size: contain;
+            position: absolute;
+            /* background-image: url(treasureChest.png); */
+            transform: translateZ(25px) rotateX(-70deg)
+        }
+    </style>
+</head>
+<body>
+    <div class="world"></div>
+    <script type ="module">
+        import latticeData from "./lattice.js";
+        import playerData from "./player.js";
+        import treasureChestData from "./treasureChest.js"
+        latticeData.initLattice();
+        playerData.initPlayer();
+        treasureChestData.initTreasureChest();
+        function listener(){
+            for(let i in latticeData.getLatticeEl()){
+            latticeData.getLatticeEl()[i].addEventListener("click",()=>{
+                console.log(1);
+                if (playerData.getPlayerMoveState() === true) return;
+                playerData.changePlayMoveState(true);
+                playerData.cgangePlayerXY(i);
+                playerData.showPlayer();
+                let isNumber = (element) => element == i;
+                let chestPosition = treasureChestData.getTreasureChestPosition().findIndex(isNumber)            
+                setTimeout(() => {
+                    playerData.changePlayMoveState(false)
+                    if(treasureChestData.getTreasureChestState()[chestPosition]===false){
+                    treasureChestData.changeTreasureChestState(chestPosition,true);
+                    treasureChestData.openChest(chestPosition);
+                }}, 1000);
+                })
+            }
+        }
+        listener()
+
+
+    </script>
+    
+</body>
+</html>

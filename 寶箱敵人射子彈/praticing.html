@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            perspective: 600px;
+        }
+        .lattice{
+            transform-style: preserve-3d;
+            width: 50px;
+            height: 50px;
+            background-color: bisque;
+            position:absolute;
+           
+            border-color: black;
+        }
+        .player {
+            position: absolute;
+            background-image: url(wa.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 50px;
+            height: 50px;
+            transition: all 1s;
+            transform: translateZ(25px) rotateX(-50deg) 
+        }
+        .world{
+            
+            transform-style: preserve-3d;
+            width: 500px;
+            height: 500px;
+            margin: auto;
+            text-align: center;
+            position: relative;
+            transform:  translateY(50px)translateX(20px) rotateX(50deg) 
+             
+        }
+        .box{
+            width:50px;
+            height:50px;
+            background-size: contain;
+            position: absolute;
+            transform: translateZ(25px) rotateX(-50deg)
+        }
+.shape-ex11{
+    width: 300px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 120px;
+    background-color: rgb(62, 159, 99);
+    opacity: 85%;
+    color: #000;
+    position: relative;
+    transition: all .5s linear;
+    font-size: large;
+    transform:  translateY(400px)translateZ(250px)translateX(100px)rotateX(-50deg)translateX(-7.5px)rotateX(360deg)
+    
+   
+}
+.shape-ex11 > p{
+    position: relative;
+    z-index: 1;
+}
+.shape-ex11::before{
+    content: "";
+    width: 50px;
+    height: 50px;
+    display: block;
+    box-sizing: border-box;
+    border-top: 5px solid #000;
+    border-left: 5px solid #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all .8s linear;
+}
+.shape-ex11::after{
+    content: "";
+    width: 50px;
+    height: 50px;
+    display: block;
+    box-sizing: border-box;
+    border-bottom: 5px solid #000;
+    border-right: 5px solid #000;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transition: all .8s ease;
+}
+.shape-ex11:hover::before,
+.shape-ex11:hover::after{
+    width: 100%;
+    height: 100%;
+}
+
+    </style>
+    
+</head>
+<body>
+    <div class="world"></div>
+    <script>
+
+        let latticeData = {
+            position:[],
+            latticeEl:[],
+        }
+        let playerData = {
+            playerEl:false,
+            x:false,
+            y:false,
+            moveState:false,
+        }
+        let treasureChestData = {
+            el:[],
+            position:[],//第幾個晶格
+            state:[]
+        }
+        function madePosition(){
+            for(let i=0;i<10;i++){
+                for(let j=0;j<10;j++){
+                    latticeData.position.push([i,j]);
+                }
+            }
+        }
+        function createlatticeEl(){
+            for(let i=0;i<latticeData.position.length;i++){
+                div = document.createElement("div");
+                div.style.left =50*latticeData.position[i][0]+"px";
+                div.style.top = 50*latticeData.position[i][1]+"px";
+                div.classList.add("lattice");
+                latticeData.latticeEl.push(div);
+                let world = document.querySelector(".world");
+                world.appendChild(div);
+            }
+        } 
+        function createPlayerEl(){
+            let elPlayer = document.createElement("div");
+            playerData.playerEl = elPlayer;
+            elPlayer.classList.add("player");
+            let world = document.querySelector(".world");
+            world.appendChild(elPlayer);
+        }
+        function cgangePlayerXY(i){
+            playerData.x = latticeData.position[i][0];
+            playerData.y = latticeData.position[i][1];
+        }
+        function initPlayerPosition(){
+            playerData.playerEl.style.left = 0+"px";
+            playerData.playerEl.style.top = 0+"px";
+        }
+        function showPlayer(){
+            playerData.playerEl.style.left =playerData.x*50+"px"
+            playerData.playerEl.style.top =playerData.y*50+"px"
+        }
+        function random(array){
+            return Math.floor(Math.random() * array.length);
+        }
+        function changeLatticBackground(){
+            let ground = ["ground0.jpg","ground1.jpg"]
+            for(let i =0;i<latticeData.latticeEl.length;i++ ){
+                let grassType = random(ground)
+                latticeData.latticeEl[i].style.backgroundImage = `url(${ground[grassType]})`
+            }  
+        }       
+        function createTreasureChest(){
+            for(let i = 0;i<5;i++){
+                let div = document.createElement("div");
+                div.classList.add("box");
+                treasureChestData.el.push(div)
+                treasureChestData.state[i] = false;
+            }
+        }
+        function treasureChestBackground(){
+            for(let i in treasureChestData.state){
+                if (treasureChestData.state[i]===false) {
+                    treasureChestData.el[i].style.backgroundImage = `url(treasureChest.png)`
+                }
+            }
+        }
+        function ifThesameFilter(){
+            let rand = random(latticeData.latticeEl);
+            let count = 0;
+            for(let i in treasureChestData.position){
+                if(rand === treasureChestData.position[i])count++; 
+            }
+            if(count>0 || rand===0) return ifThesameFilter();
+            else return rand;
+        }
+        function radomChestPostition(){
+            for (let i = 0;i<5;i++){
+                 treasureChestData.position[i] = ifThesameFilter();
+            } 
+            console.log(treasureChestData.position); 
+        }
+        function appendChest(){ 
+            treasureChestData.position.forEach((value,key)=>{  
+               latticeData.latticeEl[value].appendChild(treasureChestData.el[key]);
+            })   
+        }
+        function openChest(i){
+            treasureChestData.el[i].style.backgroundImage = `url(treasureChestOpen.png)`
+        }
+        function listener(){
+            for(let i in latticeData.latticeEl){
+            latticeData.latticeEl[i].addEventListener("click",()=>{
+        
+                if (playerData.moveState === true) return;
+                playerData.moveState = true;
+                cgangePlayerXY(i);
+                showPlayer();
+                let isNumber = (element) => element == i;
+                let chestPosition = treasureChestData.position.findIndex(isNumber)            
+                setTimeout(() => {
+                    playerData.moveState = false
+                    if(treasureChestData.state[chestPosition]===false){
+                    treasureChestData.state[chestPosition] = true;
+                    openChest(chestPosition);
+                    console.log(chestPosition);
+                    }
+                }, 1000);
+                setTimeout(()=>{
+                    if(treasureChestData.state.every((state)=>state==true)){
+                        win.classList.add("shape-ex11")
+                         win.innerText = "你贏了"
+                        
+                    }
+                },1200)
+                
+                })
+            }
+        }
+        
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        madePosition();
+        createlatticeEl();
+        createPlayerEl();
+        initPlayerPosition();
+        changeLatticBackground();
+        createTreasureChest();
+        treasureChestBackground();
+        radomChestPostition();
+        appendChest();
+        let win = document.createElement("div");
+        let world = document.querySelector(".world");
+                world.appendChild(win);
+        
+        
+        listener();
+        
+       
+            
+        
+   
+        
+        
+    </script>
+    
+</body>
+</html>

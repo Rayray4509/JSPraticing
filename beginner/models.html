@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        .player {
+                position: absolute;
+                background-image: url(_3D_Ren_0110_2_.png);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+        }
+        .food {
+            position: absolute;
+            background-image: url(BADGE.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        .arrow {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            margin: 5px;
+            background-color: #eee;
+            border: solid 1px #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="world"></div>
+    <script>
+        /*
+        玩家物件
+        星星物件
+        控制物件[螢幕上有按鍵可按]
+        碰撞物件
+        有一個人去整合[發號施令]
+        */
+        let player = {
+            value:123
+        };
+
+        let controlDirection = {
+            el:{},
+            upFn:false,
+            downFn:false,
+            leftFn:false,
+            rightFn:false,
+            setUpFn(fn){
+                if(!fn) return;
+                this.upFn = fn;
+            },
+            setDownFn(fn){
+                if(!fn) return;
+                this.downFn = fn;
+            },
+            setLeftFn(fn){
+                if(!fn) return;
+                this.leftFn = fn;
+            },
+            setRightFn(fn){
+                if(!fn) return;
+                this.rightFn = fn;
+            },
+            elTo(parent){
+                if(!parent) parent = document.body;
+                let elArrowKeys = Object.keys(this.el);
+                for (let i = 0; i < elArrowKeys.length; i++) {
+                    let key = elArrowKeys[i];
+                    let el = this.el[key];
+                    parent.appendChild(el);
+                }
+            },
+            elRemove(){
+                let elArrowKeys = Object.keys(this.el);
+                for (let i = 0; i < elArrowKeys.length; i++) {
+                    let key = elArrowKeys[i];
+                    let el = this.el[key];
+                    el.remove();
+                }
+            },
+            init(){
+                this.el = {
+                    ArrowUp:document.createElement('div'),
+                    ArrowDown:document.createElement('div'),
+                    ArrowLeft:document.createElement('div'),
+                    ArrowRight:document.createElement('div'),
+                };
+                this.el.ArrowUp.addEventListener('click',this.upFn);
+                this.el.ArrowDown.addEventListener('click',this.downFn);
+                this.el.ArrowLeft.addEventListener('click',this.leftFn);
+                this.el.ArrowRight.addEventListener('click',this.rightFn);
+
+                let elArrowKeys = Object.keys(this.el);
+                for (let i = 0; i < elArrowKeys.length; i++) {
+                    let key = elArrowKeys[i];
+                    let el = this.el[key];
+                    el.classList.add('arrow');
+                    el.classList.add(key);
+                }
+                document.addEventListener('keydown',(e) => {
+                    if(e.code === 'ArrowUp') this.upFn();
+                    if(e.code === 'ArrowDown') this.downFn();
+                    if(e.code === 'ArrowLeft')this.leftFn();
+                    if(e.code === 'ArrowRight')this.rightFn();
+                });
+                this.elTo();
+            }
+        };
+        //執行
+        controlDirection.setUpFn(function(){
+            console.log('執行往上的功能');
+        });
+        controlDirection.setDownFn(function(){
+            console.log('執行往下的功能');
+        });
+        controlDirection.setLeftFn(function(){
+            console.log('執行往左的功能');
+        });
+        controlDirection.setRightFn(function(){
+            console.log('執行往右的功能');
+        });
+        controlDirection.init();
+
+
+
+    </script>
+</body>
+
+</html>

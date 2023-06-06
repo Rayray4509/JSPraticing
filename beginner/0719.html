@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /*基本Css訊息*/
+      body {
+        margin: 0;
+        background-color: #eee;
+      }
+      .world {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background-color: gray;
+      }
+
+      #player {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-image: url(_3D_Ren_0110_2_.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+      .food {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-image: url(BADGE.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-color: #2196f3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="world"></div>
+    <script>
+      let player = {
+        x: 0,
+        y: 0,
+        speed: 50,
+        width: 50,
+        height: 50
+      };
+      let world = {
+        width: 500,
+        height: 500
+      };
+
+      let food = {
+        x: 0,
+        y: 0,
+        width: 50,
+        height: 50
+      };
+
+      //資料層創造星星
+      let unit = 50;
+      let num = 5;
+      let foodSize = {
+        width: 50,
+        height: 50
+      };
+
+      //星星位置
+      let foods = [];
+      function createFoods() {
+        for (let i = 0; i < num; i++) {
+          foods[i] = {
+            x: 0,
+            y: 0,
+            state: false
+          };
+        }
+      }
+
+      let elPlayers = [];
+      function createElement(num, attribute, elment, tag, list) {
+        //創建元素工具並且會加入HTML中需要先宣告EL空陣列ex:elPlayers=[]
+        for (let i = 0; i < num; i++) {
+          //使用方式(數量,id或class,名稱,標籤元素,el控陣列變數名稱)
+          let divs = document.querySelector('.world'); //目前會將所產生標籤塞到world裡面
+          let div = document.createElement(tag);
+          div.setAttribute(attribute, elment);
+          divs.appendChild(div); //塞到world裡面
+          list.push(div);
+          console.log(div);
+        }
+      }
+      let key = 0; //在外宣告以便使用
+      function keyDownEvent(event) {
+        //更改key的字串
+        key = event.code;
+        console.log(key);
+    
+      }
+      function showElment(selector, x, y) {
+        //顯示元素位置工具
+        let elment = document.querySelector(selector);
+        elment.style.left = x + 'px';
+        elment.style.top = y + 'px';
+      }
+      function loop() {
+        if (key === 'ArrowUp' && player.y < player.speed) {
+          player.y = world.width - player.width; //預判速度要不然會超過
+        } else if (key === 'ArrowUp') {
+          player.y -= player.speed;
+        } //上循環及邊界跳出，第一行為遇到邊界執行事項
+
+        if (
+          key === 'ArrowDown' &&
+          player.y > world.height - player.height - player.speed
+        ) {
+          player.y = 0;
+        } else if (key === 'ArrowDown') {
+          player.y += player.speed;
+        } //下循環及邊界跳出
+
+        if (key === 'ArrowLeft' && player.x < player.speed) {
+          player.x = world.height - player.height;
+        } else if (key === 'ArrowLeft') {
+          player.x -= player.speed;
+        } //左循環及邊界跳出
+
+        if (
+          key === 'ArrowRight' &&
+          player.x > world.width - player.width - player.speed
+        ) {
+          player.x = 0;
+        } else if (key === 'ArrowRight') {
+          player.x += player.speed;
+        } //右循環及邊界跳出
+
+        showElment('#player', player.x, player.y); //顯示腳色位置
+        eatFood();
+        setTimeout(loop, 300); //每300ms循環一次
+      }
+
+      //創建食物
+      let arrFoods = [];
+      createFoods();
+      createElement(5, 'class', 'food', 'div', arrFoods);
+
+      // 創造亂數key值;
+      function randomXY() {
+        for (let i = 0; i < num; i++) {
+          foods[i].x =
+            Math.floor(Math.random() * (world.width / foodSize.width)) * unit;
+          foods[i].y =
+            Math.floor(Math.random() * (world.height / foodSize.height)) * unit;
+        }
+      }
+      //顯示層
+      function renderFoods() {
+        for (let i = 0; i < num; i++) {
+          arrFoods[i].style.left = foods[i].x + 'px';
+          arrFoods[i].style.top = foods[i].y + 'px';
+        }
+      }
+      let counter = 0;
+      let collision = false;
+      let collisions = []
+      function eatFood(){  
+            
+        for(let i=0; i<foods.length; i++) {
+          let xx=player.x-foods[i].x;
+          let yy=player.y-foods[i].y;
+          let length = Math.sqrt(Math.pow(xx,2)+Math.pow(yy,2)); //計算距離           
+          if(length < player.width && foods[i].state != true ){//限制條件
+            let div = document.querySelector(".world");
+            foods[i].state = true   
+            div.removeChild(arrFoods[i]);//移除顯示
+            counter++;
+            elCounters[0].innerText =`score:${counter}`;//更新分數
+          } 
+                    collisions.push(foods[i].state);
+                }}
+                
+
+
+
+      //執行
+
+      randomXY();
+      renderFoods();
+      createElement(1, 'id', 'player', 'div', elPlayers); //創建腳色
+      let elCounters = []
+      createElement(1, 'class', 'counter', 'div', elCounters);//創建分數DIV
+      elCounters[0].innerText =`score:${counter}`//顯示分數
+      loop(); //開啟循環
+      document.addEventListener('keydown', keyDownEvent); //偵測鍵盤動作並執行keyDownEvent()
+      
+    </script>
+  </body>
+</html>

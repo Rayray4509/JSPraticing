@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        
+        let ela = [] 
+
+    function createElElement(num,attribute,elment,tag,list) {
+       
+       for (let i = 0; i < num; i++) {   
+           let div = document.createElement(tag);
+           div.setAttribute(attribute, elment);                   
+          // document.body.appendChild(div);                  
+           list.push(div);         
+       }
+   }
+         fetch('menu.json',{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+         })
+         .then(function(response) {
+            return response.json();
+         })
+         .then(function(myJson) {
+            console.log(myJson);    
+
+        createElElement(3,"class","link","a",ela);
+
+        for (i in ela){
+            ela[i].setAttribute("href",`${myJson.data[i].href}`)
+            ela[i].innerText = `${myJson.data[i].title}`
+            document.body.appendChild(ela[i]);
+            console.log(ela)
+        }
+         });
+       
+
+       
+
+        
+
+        
+    //     createElElement(3,"class","link","a",ela);
+    //    // let a =  document.querySelector(".link");
+    //     for (i in ela){
+    //         let body = document.getElementsByTagName(`${ela[i]}`) 
+    //         let att = document.createAttribute("href")
+    //         att.value = `${myJson.data[i].href}`
+    //         body.setAttributeNode(att)
+    //        // ela[i].innerHTML = `${myJson.data}`
+    //     }
+        
+    </script>
+    
+</body>
+</html>

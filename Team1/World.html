@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .world {
+            top: 0;
+            left: 0;
+            position: absolute;
+            background-color: #ebc50983;
+        }
+
+        .player {
+            position: absolute;
+            background-image: url(wa.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-color: #e75c73;
+        }
+
+        .star {
+            position: absolute;
+            background-image: url(star.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-color: rgb(255, 127, 127);
+        }
+        .btn {
+            font-weight:bold;
+            font-size:20px;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+        /* Keyboard style */
+        .keyboard {
+          padding: 2.5em 0;
+          width: 400px;
+          margin: 0 auto;
+        }
+        /* Top row for keyboard */
+        .top-row {
+          width: 300px;
+          margin: 0 auto;
+        }
+        /* Bottom row for keyboard */
+        .bottom-row {
+          display: inline-flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="position:fixed; top:355px; left:550px;">
+        <div class="keyboard">
+            <div class="top-row">
+                <input type="button" class="btn" value="上"
+                    style="color:rgb(3, 210, 247);background-color:#996399; width:50px;height:50px;border:2px #cbcbf8 dashed; border-radius:16px"
+                    onclick="up(event),eattingCounter.xxyy(), eattingCounter.il(),eattingCounter.eatFood();" />
+            </div>
+            <div class="bottom-row">
+                <input type="button" class="btn" value="左"
+                    style="color:rgb(3, 210, 247);background-color:#996399; width:50px;height:50px;border:2px #9999FF dashed; border-radius:16px"
+                    onclick="left(event),eattingCounter.xxyy(),eattingCounter.il(),eattingCounter.eatFood();" />
+                <input type="button" class="btn" value="下"
+                    style="color:rgb(3, 210, 247);background-color:#996399; width:50px;height:50px;border:2px #9999FF dashed; border-radius:16px"
+                    onclick="down(event),eattingCounter.xxyy(),eattingCounter.il(),eattingCounter.eatFood()" />
+                <input type="button" class="btn" value="右"
+                    style="color:rgb(3, 210, 247);background-color:#996399; width:50px;height:50px;border:2px #9999FF dashed; border-radius:16px"
+                    onclick="right(event),eattingCounter.xxyy(),eattingCounter.il(),eattingCounter.eatFood()" />
+            </div>
+        </div>
+    </div>
+    <script>
+        /*
+        玩家物件 -> 思明:生成 上下左右
+        星星物件 -> KO:一顆星星 隨機
+        控制物件 -> 小炫:event.code
+        碰撞物件 -> 太和:
+        整合
+        */
+
+        //家翔
+        let world = {
+            width: 500,
+            height: 500,
+            el: false,
+            init: function () {
+                this.el = document.createElement('div');
+                this.el.classList.add('world');
+                this.el.style.width = this.width + 'px';
+                this.el.style.height = this.height + 'px';
+                document.body.appendChild(this.el);
+            },
+        };
+        
+        //思銘
+        let player = {
+            x: 0,
+            y: 0,
+            speed: 50,
+            width: 50,
+            height: 50,
+            el: false,
+            init: function () {
+                this.el = document.createElement('div');
+                this.el.classList.add('player');
+                this.el.style.width = this.width + 'px';
+                this.el.style.height = this.height + 'px';
+                world.el.appendChild(this.el);
+            },
+            playerWay(keyCode) {
+                
+                if (keyCode === 'ArrowUp') { this.y -= this.speed };
+                if (this.y < 0) { this.y = world.height - this.height };
+
+                if (keyCode === 'ArrowDown') { this.y += this.speed };
+                if (this.y > world.height - this.height) { this.y = 0 };
+
+                if (keyCode === 'ArrowLeft') { this.x -= this.speed };
+                if (this.x < 0) { this.x = world.width - this.width };
+
+                if (keyCode === 'ArrowRight') { this.x += this.speed };
+                if (this.x > world.width - this.width) { this.x = 0 };
+
+                this.el.style.left = this.x + 'px';
+                this.el.style.top = this.y + 'px';
+                eattingCounter.xxyy()
+                eattingCounter.il()
+                eattingCounter.eatFood();
+
+            },
+        };     
+                
+        //小炫
+        function up(event) {
+            player.playerWay('ArrowUp');
+        }
+        function down(event) {
+            player.playerWay('ArrowDown');
+        }
+        function left(event) {
+            player.playerWay('ArrowLeft');
+        }
+        function right(event) {
+            player.playerWay('ArrowRight');
+        }        
+
+        //KO
+        let star = {
+            x: 0,
+            y: 0,
+            width: 50,
+            height: 50,
+            el: false,
+            state: false,
+            //輸入star.init()為生成星星元素
+            init: function () {
+                this.el = document.createElement(`div`);
+                this.el.setAttribute("class", `star`);
+                this.el.style.width = this.width + "px";
+                this.el.style.height = this.height + "px";
+
+            },
+            //每使用次star.rander(), Star會重置位置
+            rander: function () {
+                this.x = Math.floor(Math.random() * (world.width + 1 - this.width) / 50) * 50;
+                this.y = Math.floor(Math.random() * (world.height + 1 - this.height) / 50) * 50;
+                this.el.style.left = this.x + "px";
+                this.el.style.top = this.y + "px";
+            },
+            //place可放置任何div (place完整格式：  document.querySelector(`#div`))
+            moveTo: function (place) {
+                if (place) {
+                    place.appendChild(this.el);
+                } else {
+                    document.body.appendChild(this.el);
+                }}
+        };
+        //太和
+        let eattingCounter = { 
+        collision:false,
+        collisions:[],
+        xx:0,
+        yy:0,
+        length:false, //計算距離
+        elW:false,
+        elC:false,
+        elFood:false,
+        foodState:0,
+        score :0,
+        init(foods,state){
+          this.elFood = foods;
+          this.foodState = state;
+          
+        },
+        xxyy(){
+            this.xx=player.x-star.x;
+            this.yy=player.y-star.y;
+         },
+         il(){
+            this.length = Math.sqrt(Math.pow(this.xx,2)+Math.pow(this.yy,2));
+            
+         },
+    
+        eatFood(){               
+          if(this.length < player.width && this.foodState != true){//限制條件
+            this.foodState = true;   
+            this.elW.removeChild(this.elFood);//移除顯示 
+            this.score ++; 
+            eattingCounter.elC.innerText =`score:${this.score}`  
+            } 
+            this.collisions.push(this.foodState);
+           
+            },
+        creatCounter(){
+            this.elW = document.querySelector(".world");
+            this.elC = document.createElement("div");
+            this.elC.setAttribute("class", "counter");                  
+            this.elW.appendChild(this.elC);
+            this.elC.innerText =`score:${this.score}`;//更新分數
+            },}
+        
+
+        //執行
+        world.init();
+        //
+        player.init();
+        document.addEventListener('keydown', function (e) {
+            player.playerWay(e.code);
+        });
+        //
+        let worldBoard = document.querySelector(`.world`);
+        star.init();
+        star.rander();
+        star.moveTo(worldBoard);
+        console.log(star.el);
+
+        eattingCounter.init(star.el,star.state);
+        eattingCounter.creatCounter();
+        
+    
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let player = {
+            x:0,
+            y:0,
+            width:50,
+            height:50,
+            el:false,
+            init:function(){
+                    this.el = document.createElement("div");
+                    this.el.setAttribute("class", "player");
+                    this.el.setAttribute("style",`left: ${this.x}px;top: ${this.y}px;width: ${this.width}px;height: ${this.height}px;`)
+                   // this.el.setAttribute("style",`width: ${this.width}px;height: ${this.height}px;`)                   
+                    document.body.appendChild(this.el);
+            }
+        }
+        player.init()
+        console.log(player.el);
+    </script>
+    
+</body>
+</html>

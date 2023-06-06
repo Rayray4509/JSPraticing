@@ -1,0 +1,218 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      .sampleCenter{
+        position: absolute;
+        border-radius: 50%; 
+        background-color:rgb(128, 0, 255);
+        width:250px; 
+        height:250px;
+      }
+
+      #player {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-image: url(_3D_Ren_0110_2_.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+    
+      .joyStickCenter {
+        position: absolute;
+        border-radius: 50%; 
+        background-color:red;
+        width:80px; 
+        height: 80px;
+      
+
+      }
+    </style>
+  </head>
+  <body>
+  <div class="sampleCenter"></div>
+  <div class="joyStickCenter"></div>
+  <div id="player"></div>
+    <script>
+    let XYcontroler = {
+      "joyStickCenterData":{
+        "width":false, 
+        "height":false,
+        "divName":false,
+        "el":false
+      },
+      "joyStickData" : {
+        "centerX":false,
+        "centerY":false,
+        "width":false, 
+        "height":false,
+        "radius":false,
+        "divName":false,
+        "el":false
+      },
+      "charData":{ 
+      "x": 0,
+      "y": 0,
+      "width": false,
+      "height": false,
+      "divName":false,
+      "el":false
+      },
+      "touchData":{
+      "x":false,
+      "y":false,
+      "radian":false,
+      "newtouchDataY":false,
+      "newtouchDataX":false,
+      },
+      "unit":10,
+      "length":false,
+      "acceleration":20,
+
+      init(joyStickWidth,joyStickHeigth,joyStickDivName,centerX,centerY,joyStickAreaDiameter,joyStickAreaDivName,charWidth,charHeigth,chardivName){
+        this.joyStickCenterData.width = joyStickWidth;
+        this.joyStickCenterData.height = joyStickHeigth;
+        this.joyStickCenterData.divName = joyStickDivName;
+        this.joyStickData.centerX = centerX;
+        this.joyStickData.centerY = centerY;
+        this.joyStickData.width = joyStickAreaDiameter;
+        this.joyStickData.height = joyStickAreaDiameter;
+        this.joyStickData.divName = joyStickAreaDivName;
+        this.joyStickData.radius = this.joyStickData.width/2;
+        this.charData.width = charWidth;
+        this.charData.height = charHeigth;
+        this.charData.divName = chardivName;
+        window.addEventListener('touchmove',(event)=>{this.touchmove(event)});
+        this.showSampleCenter();
+        this.initJoyCenter();
+        this.touchUpDownSensor();
+        
+
+
+
+      },
+      changeAcceleration(acceleration){
+        this.acceleration = acceleration;
+      },
+      changeCharStarPosition(charStartX,charStartY){
+        this.charData.x = charStartX;
+        this.charData.y = charStartY;
+        this.showPlayer();
+
+      },
+      transFormPolar(){
+        this.touchData.newtouchDataY = this.touchData.y-this.joyStickData.centerY;
+        this.touchData.newtouchDataX = this.touchData.x-this.joyStickData.centerX;
+        this.touchData.radian = Math.atan2(-(this.touchData.newtouchDataY),this.touchData.newtouchDataX);
+        
+      },
+      touchmove(event){
+        this.touchData.x = event.touches[0].pageX;
+        this.touchData.y = event.touches[0].pageY;
+        this.centerLength();
+        
+      },
+      touchUpDownSensor(){
+        let interval = false;
+        window.addEventListener("touchstart", (downe) => { 
+        if (downe.isTrusted === false) return;
+        this.touchmove(downe);
+        if(this.length<=this.joyStickData.radius){
+          interval = setInterval(()=>{this.do()}, 50);
+        }
+      });
+      window.addEventListener("touchend", (upe) => {
+        
+        this.initJoyCenter();
+        if (upe.isTrusted === true) clearInterval(interval);
+      });
+      },
+      controlerData(){
+        this.accelerate();
+        if(this.touchData.radian>0 && this.touchData.radian<1.57){
+          this.charData.x += this.unit*((-1)*(this.touchData.radian-1.57));
+          this.charData.y -= this.unit*(this.touchData.radian);  
+        }
+        if(this.touchData.radian>1.57 && this.touchData.radian<3.14){
+          this.charData.x -= this.unit*((this.touchData.radian-1.57));
+          this.charData.y -= this.unit*((-1)*(this.touchData.radian-3.14));  
+        }
+        if(this.touchData.radian> -3.14 && this.touchData.radian<-1.57){
+          this.charData.x -= this.unit*(-1)*(this.touchData.radian+1.57);
+          this.charData.y += this.unit*(this.touchData.radian+3.14);  
+        }
+        if(this.touchData.radian>-1.57 && this.touchData.radian<0){
+          this.charData.x += this.unit*(this.touchData.radian+1.57);
+          this.charData.y += this.unit*(-1)*(this.touchData.radian);  
+        } 
+      },
+      showPlayer(){
+         this.charData.el = document.body.querySelector(this.charData.divName)
+         this.charData.el.style.transform = `translateX(${this.charData.x -this.charData.width/2}px)translateY(${this.charData.y -this.charData.height/2}px)`;
+        },
+        
+      showjoycenter(){
+        if(this.length<=this.joyStickData.radius){
+        this.joyStickCenterData.el.style.left = this.touchData.x -this.joyStickCenterData.width/2+ "px";
+        this.joyStickCenterData.el.style.top = this.touchData.y -this.joyStickCenterData.height/2+ "px";
+        }
+      },
+      showSampleCenter(){
+        this.joyStickData.el = document.body.querySelector(this.joyStickData.divName);
+        this.joyStickData.el.style.left = (this.joyStickData.centerX - this.joyStickData.width/2)+ "px";
+        this.joyStickData.el.style.top = (this.joyStickData.centerY - this.joyStickData.height/2)+ "px";
+      },
+      centerLength(){
+        let xx = this.touchData.x-this.joyStickData.centerX;
+        let yy = this.touchData.y-this.joyStickData.centerY;
+        this.length = Math.sqrt(Math.pow(xx,2)+Math.pow(yy,2));
+      },
+      initJoyCenter(){
+        this.joyStickCenterData.el = document.body.querySelector(this.joyStickCenterData.divName)
+        this.joyStickCenterData.el.style.left = this.joyStickData.centerX -this.joyStickCenterData.width/2+ "px";
+        this.joyStickCenterData.el.style.top = this.joyStickData.centerY -this.joyStickCenterData.height/2+ "px";
+
+      },
+      do(){
+        this.transFormPolar()
+        this.controlerData()
+        this.showjoycenter()
+        this.showPlayer()
+        },
+      accelerate(){
+      if(this.length<this.joyStickData.radius){
+        let accelerateRatio = this.length/this.joyStickData.radius;        
+        this.unit = accelerateRatio*this.acceleration
+        }
+      }
+    }
+  //使用說明:
+  //需要創建3個DIV分別為 搖桿/搖桿範圍/腳色,基本CSS寬高須自行設定 
+  //需先執行XYcontroler.init()
+  //初始化資料依序需要給定
+  //div名稱為 id或class 需輸入字串 座標單位皆為px
+  //(搖桿中心點寬/搖桿中心點高/搖桿的DIV名稱/搖桿想出現的x座標/搖桿想出現的y座標/搖桿活動範圍直徑/搖桿活動範圍DIV名稱/腳色寬度/腳色長度/腳色DIV名稱/
+  // init(joyStickWidth,joyStickHidth,joyStickDivName,centerX,centerY,joyStickAreaDiameter,joyStickAreaDivName,charWidth,charHeigth,chardivName)
+  //範例:XYcontroler.init(80,80,".joyStickCenter",500,500,250,".sampleCenter",50,50,"#player") ;
+
+  //若想更改搖桿移動幅度加速度可使用XYcontroler.changeAcceleration(acceleration)函數
+  //填入想加速的幅度即可,預設值為20
+  //範例:XYcontroler.changeAcceleration(50);
+
+  //若想更改腳色初始位置可使用XYcontroler.changeCharStarPosition(charStartX,charStartY)函數
+  //分別填入需要的起始位置x與y座標即可預設為(0,0)
+  //範例:XYcontroler.changeCharStarPosition(200,100);
+   
+  XYcontroler.init(80,80,".joyStickCenter",500,500,250,".sampleCenter",50,50,"#player") ;
+  XYcontroler.changeCharStarPosition(200,100);
+  XYcontroler.changeAcceleration(20);
+
+    </script> 
+  </body>
+  </html>

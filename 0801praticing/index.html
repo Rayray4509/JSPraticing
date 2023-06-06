@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script type ="module">
+        import controller from "./Controller/index.js";
+        controller.worldSet();
+        controller.playerSet("url(_3D_Ren_0110_2_.png)");
+        document.addEventListener("keydown",(event)=>{
+            if (event.code === "ArrowUp" && controller.getY() >0 ) controller.arrowUp();
+            if (event.code === "ArrowDown"&& controller.getY() <450) controller.arrowDown();
+            if (event.code === "ArrowLeft" && controller.getX() >0) controller.arrowLeft();
+            if (event.code === "ArrowRight"&&controller.getX() <450) controller.arrowRight();
+            controller.showElment();
+        })
+        
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style> 
+        body{
+            perspective: 600px;
+        }
+        .lattice{
+            transform-style: preserve-3d;
+            width: 50px;
+            height: 50px;
+            background-color: bisque;
+            position:absolute;
+            border-color: black;
+        }
+        .player {
+            position: absolute;
+            background-image: url(wa.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 50px;
+            height: 50px;
+            transition: all .200s;
+            transform: translateZ(25px) rotateX(-50deg) 
+        }
+        .world{
+            
+            transform-style: preserve-3d;
+            width: 500px;
+            height: 500px;
+            margin: auto;
+            text-align: center;
+            position: absolute;
+            transform:  translateY(80px)translateX(400px) rotateX(50deg) 
+             
+        }
+        .box{
+            width:50px;
+            height:50px;
+            background-image: url(treasureChest.png); 
+            background-size: contain;
+            position: absolute;
+            background-repeat: no-repeat;
+            transform: translateZ(25px) rotateX(-50deg);
+            transition-property: top,left ;
+            transition-duration:1s
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="world"></div>
+    <script>
+         let lastPlayer = false;
+
+        localStorage.removeItem('playerId');
+
+        function postPlayerId(){
+            let id = getLocadata();
+            lastPlayer = id
+            if(getLocadata()===null)id= inputKeeper();
+            return fetch('/api/setPlayer',{
+                    method: "POST",
+                    body: JSON.stringify({player:id}),
+                    headers: {"Content-Type": "application/json"}
+                })
+            .then(res=>res.json());
+        }
+        function setLocalData(){
+            postPlayerId().then((res)=>{
+                localStorage.setItem('playerId', res);
+            })
+        }
+        setLocalData();
+        
+        function getLocadata(){
+            console.log(localStorage.getItem('playerId'));
+            return localStorage.getItem('playerId');
+        }
+        function inputKeeper(){
+            id = prompt('請輸入你的暱稱');
+            if(id===""||id === null) {
+                alert("暱稱不可為空白");
+                return inputKeeper();
+            }else return id;
+        }
+     
+       
+        
+        
+        function random(array){
+            return Math.floor(Math.random() * array.length);
+        }
+        function fetchPositionData(){
+            return fetch('/api/position',{
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"}
+                    })
+                    .then(res=>res.json())   
+        }
+        function changeLatticBackground(el){
+            let ground = ["ground0.jpg","ground1.jpg"]
+            let grassType = random(ground)
+            el.style.backgroundImage = `url(${ground[grassType]})` 
+        }  
+        function createlatticeEl(){
+            fetchPositionData().then((array)=>{
+                for(let i in array){
+                div = document.createElement("div");
+                div.style.left =50*array[i][0]+"px";
+                div.style.top = 50*array[i][1]+"px";
+                div.classList.add("lattice");
+                changeLatticBackground(div)
+                let world = document.querySelector(".world");
+                world.appendChild(div);
+                }
+            })          
+        } 
+        function fetchKeyData(code){
+            let id = getLocadata();
+            return fetch('/api/move',{
+                    method: "POST",
+                    body: JSON.stringify({keyCode:code,playerId:id}),
+                    headers: {"Content-Type": "application/json"}
+                })
+            .then(res=>res.json())
+        }
+        function movePlayer(e){
+            console.log(e.code);
+            if(e.code === "KeyW"){
+                fetchKeyData("KeyW").then((res)=>{
+                    console.log(res);
+                    //showPlayer(res)
+                })
+            }
+            if(e.code === "KeyS"){
+                fetchKeyData("KeyS").then((res)=>{
+                    //showPlayer(res)
+                })
+            }
+            if(e.code === "KeyA"){
+                fetchKeyData("KeyA").then((res)=>{
+                   // showPlayer(res)
+                })
+            }
+            if(e.code === "KeyD"){
+                fetchKeyData("KeyD").then((res)=>{
+                   // showPlayer(res)
+                })
+            }
+        }
+        function createPlayerEl(){
+            let elPlayer = document.createElement("div");
+            elPlayer.classList.add("player");
+            let world = document.querySelector(".world");
+            world.appendChild(elPlayer);
+        }
+       
+        
+
+        function showPlayer(xy){
+            let playerEl = document.querySelectorAll(".player");
+            
+            for(let i = 0; i<playerEl.length;i++){
+                playerEl[i].style.left =xy[i][0]+"px";
+                playerEl[i].style.top =xy[i][1]+"px";
+            }
+        }
+        function postTreasureChestNum(num){
+            return fetch('/api/createTreasureChest',{
+                method: "POST",
+                body: JSON.stringify({quantity:num}),
+                headers: {"Content-Type": "application/json"}
+            })
+            .then(res=>res.json());
+        }
+        function showChest(el,array){
+            el.forEach((value,key)=>{ 
+                value.style.left =array[key][0]*50+"px"
+                value.style.top =array[key][1]*50+"px";
+            })
+        }  
+        function createTreasureChest(num){
+            postTreasureChestNum(num).then((res)=>{
+                console.log(res);
+                for(let i = 0;i<num;i++){
+                    let div = document.createElement("div");
+                    div.classList.add("box");
+                    let world = document.querySelector(".world");
+                    world.appendChild(div);
+                }
+                let chestEl = document.querySelectorAll(".box");
+                showChest(chestEl,res.array);
+                
+            })
+        }
+        function updatePlayer(){
+            fetch('/api/updatePlayer',{
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"}
+                })
+            .then(res=>res.json())
+            .then((res)=>{
+                    showPlayer(res.position)//[x,y]
+            })
+            setTimeout(updatePlayer,10)
+            
+        }
+        function createPlayer(){
+            fetch('/api/updatePlayer',{
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"}
+                })
+            .then(res=>res.json())
+            .then((res)=>{
+                for(let i =0;i<res.length-1;i++){
+                    createPlayerEl()
+                }
+                
+            })
+
+        }
+       
+        function decateNewPlayer(){
+            fetch('/api/decatePlayer',{
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"}
+                })
+            .then(res=>res.json())
+            .then((res)=>{
+                
+                if (lastPlayer!=res.text) {
+                    console.log(res.text+"join this game");
+                    createPlayerEl()
+                    lastPlayer = res.text;
+                }
+            })
+            
+            setTimeout(decateNewPlayer,1000)
+        }
+        createTreasureChest(5)
+        createlatticeEl();
+        document.addEventListener("keydown",(e)=>{
+            movePlayer(e);
+        })
+        createPlayer()
+        updatePlayer();
+        decateNewPlayer();
+        
+
+  
+        
+        
+        
+        
+    </script>
+    
+</body>
+</html>

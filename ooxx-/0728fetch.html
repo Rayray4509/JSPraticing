@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="current"></div>
+    <script>
+        let tempData = {
+            country:false,
+            location:false,
+            tempList:{
+                nowTime:false,
+                time:[],
+                temperature:[]
+            }
+        };
+        fetch("F-D0047-089.json")
+        .then(res=>res.json())
+        .then(res=>{
+            data = res;
+            
+            let country = data.records.locations[0].locationsName;
+            let location = data.records.locations[0].location[0].locationName;
+            let temperatureList = data.records.locations[0].location[0].weatherElement[3].time
+            console.log(temperatureList);
+            tempData.country = country;
+            tempData.location = location; 
+            temperatureList.forEach( (value,key) => { 
+                tempData.tempList.time[key] = temperatureList[key].dataTime;
+                tempData.tempList.temperature[key] = temperatureList[key].elementValue[0].value;
+            })
+
+            console.log(tempData);
+            let timeListEl = [];
+            createElement(tempData.tempList.temperature,timeListEl);
+            doInnerText(timeListEl);
+            showElement(timeListEl);
+
+
+       
+
+        })
+        let timeData= {
+            yy:false,
+            mm:false,
+            d:false,
+            h:false,
+            m:false,
+            s:false,
+
+            mynow(){
+                NowDate=new Date();
+                this.yy=NowDate.getFullYear();
+                this.mm=NowDate.getMonth()+1;
+                this.d=NowDate.getDate();
+                this.h=NowDate.getHours();
+                this.m=NowDate.getMinutes();
+                this.s=NowDate.getSeconds();
+            },
+       
+            current_time(){
+            this.mynow();
+            if(this.s<10) {this.s=`0${this.s}`}
+                document.getElementById('current').innerText = "現在時刻:"+this.yy+"年"+this.mm+"月"+this.d+"日"+this.h+"時"+this.m+"分"+this.s+"秒";
+                setTimeout(()=>{this.current_time()},500);
+            }
+            
+        }
+        timeData.current_time();
+
+        function createElement(Data,list) {
+            Data.forEach((value,key)=>{
+                let div = document.createElement("div");
+                list[key] = div;
+            })
+        }
+        function doInnerText(list) {
+            tempData.tempList.temperature.forEach((value,key)=>{
+            list[key].innerText = `時間:${tempData.tempList.time[key]}溫度:${tempData.tempList.temperature[key]}度`;
+            if(value>30)list[key].style.backgroundColor = "red"
+            else list[key].style.backgroundColor = "green"
+
+            })   
+        }
+        function showElement(list) {
+            list.forEach((el)=>{
+            document.body.appendChild(el);
+            })   
+        }
+        
+
+        
+       
+
+      
+
+
+
+
+    </script>
+    
+</body>
+</html>

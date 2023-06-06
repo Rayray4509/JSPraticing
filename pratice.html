@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    
+    <script>
+
+        let fruits = ["西瓜","草莓","香蕉","流連","水蜜桃"];
+        let containers = ["杯子","碗","碟子"];
+        let material=[];
+        let product = [];
+        
+        function getRandomElement(ra){
+            return(Math.floor(Math.random() * ra.length));
+            
+        };
+
+        function getRandomNum(){
+            return 3 +(Math.floor(Math.random() * 2));
+        }
+        
+        let container = containers[getRandomElement(containers)];
+
+        for(i=0; i < getRandomNum(); i++ ){
+            
+            let fruit= fruits[getRandomElement(fruits)];
+            material.push(fruit)
+            console.log(i);    
+        }
+        
+        console.log(material);
+        
+         for(i=0; i<material.length; i++ )
+             if (container==="杯子") {
+                 product.push(material[i]+"汁");
+               
+                
+             } else if (container==="碗"){
+                 product.push(material[i]+"冰");
+                
+                
+             }else if (container==="碟子"){
+                 product.push(material[i]+"泥");
+               
+
+             };
+             console.log(product);
+//取得隨機一個key
+//隨機取得3||4
+//隨機取得3~4樣水果
+function getRadomKey(ra){
+    return(Math.floor(Math.random() * ra.length));
+}
+let picks = [3,4]
+ 
+ for(i=0;i< getRandomKey(picks);){
+    console.log(fruits)
+ }
+        
+        
+   
+  
+    
+
+    </script>
+    
+</body>
+</html>

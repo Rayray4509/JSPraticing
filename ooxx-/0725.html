@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let arr = ["香蕉",55,"鳳梨","西瓜",55,"流連",60,99];
+        function randomStr(){
+            let stringArr = [];
+            for(let i in arr){
+                let type = typeof(arr[i]);
+                if(type === typeof("")){
+                    stringArr.push(arr[i]);
+                }
+            }
+            let rand = [Math.floor(Math.random() * (stringArr.length))];
+            return stringArr[rand];
+        };
+        function randomNumber(){
+            let stringArr = [];
+            for(let i in arr){
+                let type = typeof(arr[i]);
+                if(type === typeof(0)){
+                    stringArr.push(arr[i]);
+                }
+            }
+            let rand = [Math.floor(Math.random() * (stringArr.length))];
+            return stringArr[rand];
+        };
+        console.log(randomStr(),randomNumber());
+    
+        let arr2 = arr.sort();
+        
+        console.log(arr.sort());
+
+
+
+
+    </script>
+    
+</body>
+</html>

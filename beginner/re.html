@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .world{
+             position: absolute;
+             width: 500px;
+             height: 500px;
+             background-color: gray;
+            }
+    </style>
+</head>
+<body>
+    <div class = "world"></div>
+    
+
+    <script>
+        function randColor(){
+            color = [Math.floor(Math.random() * 255)];
+            return color;
+        } 
+        
+        
+        let elWorld = document.querySelector(".world")
+        let aa = 0
+        let bb = 0
+        let cc = 0
+
+        function loop() {
+            let aa = randColor()
+            let bb = randColor()
+            let cc = randColor()
+           
+        elWorld.style.backgroundColor = 'rgb(' + aa + ',' + bb + ',' + cc + ')'
+        console.log(aa,bb,cc)
+        setTimeout(loop,500);
+    }
+    loop();
+    
+      
+
+        // function getNowTime(){
+        //     return Date.now();
+        // }
+        // let a = getNowTime();
+        
+        // console.log(a);
+        
+       
+        // let futureTime = new Date(2022);
+        // let startTime = getNowTime();
+        // let endTime = startTime + 5000;
+        // let isTimeOut = false;
+
+        // function loop() {
+
+        //     if(!isLoop)return;
+        //     let nowTime = getNowTime();
+        //     if (isTimeOut ===false && nowTime > endTime ){
+        //         console.log("時間到");
+        //         isTimeOut = true;
+        //     }
+        //     //console.log(getNowTime());
+        //     requestAnimationFrame(loop);
+        // // }
+        // requestAnimationFrame(loop);
+    </script>
+
+    
+</body>
+</html>

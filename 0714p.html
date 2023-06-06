@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let ary = [];
+        let arr = [];
+        function pushAry(length){
+            ary=[];   
+            for (let i = 0; i < length;i++){
+                let num = randomNumber();
+                ary.push(num);
+            }
+        }
+        function randomNumber(){
+            return Math.floor(Math.random()*10)
+        }
+
+        
+        
+
+        function addRandomNumber(){
+            let length = 3;
+            let aa = arr.push(ary); 
+            if(arr.length%2 === 0)length = 2;
+            pushAry(length);
+            arr.push(ary); 
+            console.log(arr)
+            
+            
+            console.log(aaa)
+        }
+        function TCT(){
+            for(let i = 0; i<arr.length;i++){
+                let theSameCounter = 0
+                if(length !== arr[i].length) continue;
+                for(let j=0; j<ary.length; j++){
+                    if(arr[i][j] === ary[j] ) theSameCounter++;
+                }                                                        
+                if(theSameCounter===arr.length)return true; 
+            }
+            return false;
+        }  
+        
+        // {
+        //                 let rand=randomNumber();
+        //                 while(rand===ary[j]) {rand=randomNumber();}
+        //                 ary[j] = rand;}
+          
+
+       
+    
+
+
+
+        document.addEventListener("keydown",addRandomNumber)
+        function checkCollision(ary) {
+            for (let i = 0; i < arr.length; i++) {
+                if(ary.length !== arr[i].length) continue;
+
+                let collisionCount = 0;
+                for (let x = 0; x < ary.length; x++) {
+                    if(ary[x] === arr[i][x]){
+                        collisionCount++;
+                    }
+                }
+                if(collisionCount === ary.length){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+       
+
+
+
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<div>
+
+</div>
+<style>
+
+</style>
+<script>
+  list=[];
+  let arrInt = ["西瓜","香蕉","蘋果","檸檬","草莓","芒果"];
+   document.addEventListener("keydown", function(){
+
+    //let num = parseInt(Math.random() * 1000)/100;
+    
+    
+    let rand = [Math.floor(Math.random() * arrInt.length)];
+    let randElement= arrInt[rand]
+    console.log(randElement);
+    for(let i = rand ; i<=5;i++){
+
+    list.push(arrInt[i]);
+
+    }
+    console.log(list);
+
+    
+  
+    
+    
+
+   });
+ 
+  
+ 
+   
+</script>
+    
+</body>
+</html>

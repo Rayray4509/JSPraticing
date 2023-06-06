@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+        <style>
+            body{
+                margin: 0;
+            }
+            #user{
+                width: 80px;
+                height: 100px;
+                background-image: url(_3D_Ren_0110_2_.png);
+                position: absolute;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-color: cadetblue;
+            }
+        </style>
+</head>
+<body>
+    <div id="user"></div>
+ 
+  
+    <script>
+        let y = 0
+        let x = 0
+        let elUser = document.querySelector("#user");
+
+        document.addEventListener("keydown",function(event){
+            
+            if (event.code === "ArrowUp" && y>0 ){
+                 y-=5
+                elUser.style.top =y + "px";
+            }
+            else if (event.code === "ArrowDown"  ){
+                 y+=5
+                elUser.style.top =y + "px";     
+            }
+            else if (event.code === "ArrowLeft"&& y>0 ){
+                 x-=5
+                elUser.style.left =x + "px";   
+            }
+            else if (event.code === "ArrowRight"  ){
+                 x+=5
+                elUser.style.left =x + "px";   
+            };
+            console.log(elUser.style.left)
+
+        });
+        
+
+        
+        
+        
+       // elUser.innerText=88;
+        
+
+    </script>
+    
+</body>
+</html>

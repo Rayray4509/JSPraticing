@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style> 
+        body{
+            perspective: 600px;
+        }
+        .lattice{
+            transform-style: preserve-3d;
+            width: 50px;
+            height: 50px;
+            background-color: bisque;
+            position:absolute;
+            border-color: black;
+        }
+        .player {
+            position: absolute;
+            background-image: url(wa.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 50px;
+            height: 50px;
+            transition: all .200s;
+            transform: translateZ(25px) rotateX(-50deg) 
+        }
+        .world{
+            
+            transform-style: preserve-3d;
+            width: 500px;
+            height: 500px;
+            margin: auto;
+            text-align: center;
+            position: absolute;
+            transform:  translateY(80px)translateX(400px) rotateX(50deg) 
+             
+        }
+        .box{
+            width:50px;
+            height:50px;
+            background-image: url(treasureChest.png); 
+            background-size: contain;
+            position: absolute;
+            background-repeat: no-repeat;
+            transform: translateZ(25px) rotateX(-50deg);
+            transition-property: top,left ;
+            transition-duration:1s
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="world"></div>
+    <script>
+        
+        function random(array){
+            return Math.floor(Math.random() * array.length);
+        }
+        function fetchPositionData(){
+            return fetch('/api/position',{
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"}
+                    })
+                    .then(res=>res.json())   
+        }
+        function changeLatticBackground(el){
+            let ground = ["ground0.jpg","ground1.jpg"]
+            let grassType = random(ground)
+            el.style.backgroundImage = `url(${ground[grassType]})` 
+        }  
+        function createlatticeEl(){
+            fetchPositionData().then((array)=>{
+                for(let i in array){
+                div = document.createElement("div");
+                div.style.left =50*array[i][0]+"px";
+                div.style.top = 50*array[i][1]+"px";
+                div.classList.add("lattice");
+                changeLatticBackground(div)
+                let world = document.querySelector(".world");
+                world.appendChild(div);
+                }
+            })          
+        } 
+        function fetchKeyData(code){
+            return fetch('/api/move',{
+                    method: "POST",
+                    body: JSON.stringify({keyCode:code}),
+                    headers: {"Content-Type": "application/json"}
+                })
+            .then(res=>res.json())
+        }
+        function movePlayer(e){
+            console.log(e.code);
+            if(e.code === "KeyW"){
+                fetchKeyData("KeyW").then((res)=>{
+                    console.log(res);
+                    showPlayer(res.playerX,res.playerY)
+                })
+            }
+            if(e.code === "KeyS"){
+                fetchKeyData("KeyS").then((res)=>{
+                    console.log(res);
+                    showPlayer(res.playerX,res.playerY)
+                })
+            }
+            if(e.code === "KeyA"){
+                fetchKeyData("KeyA").then((res)=>{
+                    console.log(res);
+                    showPlayer(res.playerX,res.playerY)
+                })
+            }
+            if(e.code === "KeyD"){
+                fetchKeyData("KeyD").then((res)=>{
+                    console.log(res);
+                    showPlayer(res.playerX,res.playerY)
+                })
+            }
+        }
+        function createPlayerEl(){
+            let elPlayer = document.createElement("div");
+            elPlayer.classList.add("player");
+            let world = document.querySelector(".world");
+            world.appendChild(elPlayer);
+            initPlayerPosition(elPlayer);
+        }
+        function initPlayerPosition(playerEl){
+            playerEl.style.left = 0+"px";
+            playerEl.style.top = 0+"px";
+        }
+        function showPlayer(x,y){
+            let playerEl = document.querySelector(".player");
+            playerEl.style.left =x+"px"
+            playerEl.style.top =y+"px"
+        }
+        function postTreasureChestNum(num){
+            return fetch('/api/createTreasureChest',{
+                method: "POST",
+                body: JSON.stringify({quantity:num}),
+                headers: {"Content-Type": "application/json"}
+            })
+            .then(res=>res.json())
+            
+        }
+        function showChest(el,array){
+            el.forEach((value,key)=>{ 
+                value.style.left =array[key][0]*50+"px"
+                value.style.top =array[key][1]*50+"px";
+            })
+        }  
+        function createTreasureChest(num){
+            for(let i = 0;i<num;i++){
+                let div = document.createElement("div");
+                div.classList.add("box");
+                let world = document.querySelector(".world");
+                world.appendChild(div);
+            }
+            postTreasureChestNum(num).then((res)=>{
+                console.log(res);
+                let chestEl = document.querySelectorAll(".box");
+                console.log(chestEl);
+                showChest(chestEl,res.array)
+            })
+        }
+        createTreasureChest(5)
+        createlatticeEl();
+        createPlayerEl()
+        document.addEventListener("keydown",(e)=>{
+            movePlayer(e)
+        })
+        
+    </script>
+    
+</body>
+</html>

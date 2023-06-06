@@ -1,0 +1,27 @@
+<html>
+<head></head>
+<body>
+<div id="current"></div>
+</body>
+</html>
+<script>
+function mynow(){
+	NowDate=new Date();
+    yy=NowDate.getFullYear();
+    mm=NowDate.getMonth()+1;
+    d=NowDate.getDate();
+	h=NowDate.getHours();
+	m=NowDate.getMinutes();
+	s=NowDate.getSeconds();
+}
+function current_time(){
+    mynow();
+    if(s<10) {s=`0${s}`}
+    document.getElementById('current').innerText = "現在時刻:"+yy+"年"+mm+"月"+d+"日"+h+"時"+m+"分"+s+"秒";
+    setTimeout(current_time,500);
+    
+}
+
+current_time()
+
+</script>

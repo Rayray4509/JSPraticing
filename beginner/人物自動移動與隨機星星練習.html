@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /*基本Css訊息*/
+        body {
+            margin: 0;
+            background-color: #eee;
+
+        }
+        .world{
+         position: absolute;
+         width: 500px;
+         height: 500px;
+         background-color: gray;
+        }
+        
+        #player {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url(_3D_Ren_0110_2_.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            
+        }
+        #player {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url(_3D_Ren_0110_2_.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            
+        }
+        .star {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url(BADGE.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-color: #2196f3;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="world"></div>
+<script>
+    let player ={
+            x:0,
+            y:0,
+            speed:20,
+            width: 50,
+            height: 50,
+        };
+    let world = {
+    width: 500,
+    height: 500,
+    }
+    let star = {
+        x:0,
+        y:0,
+        width: 50,
+        height: 50
+    }
+    let elPlayers=[];
+    function createElement(num,attribute,elment,tag,list) {//創建元素工具並且會加入HTML中需要先宣告EL空陣列ex:elPlayers=[]
+        for (let i = 0; i < num; i++) {                    //使用方式(數量,屬性,值,標籤元素,el控陣列變數名稱)
+            let divs = document.querySelector(".world");   //目前會將所產生標籤塞到world裡面
+            let div = document.createElement(tag);
+            div.setAttribute(attribute, elment);                   
+            divs.appendChild(div);//塞到world裡面                 
+            list.push(div);
+            console.log(div)
+        }
+    }
+    let key = 0 //在外宣告以便使用
+    function keyDownEvent(event){//更改key的字串
+        key = event.code;
+        console.log(key);
+         
+    }     
+    function loop(){
+        if (key === "ArrowUp" && player.y<player.speed){player.y = world.width-player.width;//預判速度要不然會超過
+        }else if(key === "ArrowUp"){player.y -= player.speed;}//上循環及邊界跳出，第一行為遇到邊界執行事項
+
+        if (key === "ArrowDown" && player.y>world.height-player.height-player.speed){player.y = 0;
+        }else if (key === "ArrowDown"){player.y += player.speed;}//下循環及邊界跳出
+
+        if (key === "ArrowLeft" && player.x<player.speed ){player.x = world.height-player.height;
+        }else if(key === "ArrowLeft" )  {player.x -= player.speed;}//左循環及邊界跳出
+
+        if (key === "ArrowRight" && player.x>world.width-player.width-player.speed){player.x = 0;
+        }else if(key === "ArrowRight"){player.x += player.speed;}//右循環及邊界跳出
+
+        elPlayers[0].setAttribute("style",`left: ${player.x}px;top: ${player.y}px;`)//顯示腳色位置
+        setTimeout(loop,500);//每500ms循環一次
+        
+    }
+
+    function starRandom(){//隨機星星位置
+             star.x = Math.floor(Math.random() * (world.width-star.width+1));//注意星星px
+             star.y = Math.floor(Math.random() * (world.height-star.height+1));
+        }
+    function showStar(){
+        for(let i in elstars){//做五次
+            starRandom()//隨機星星位置
+            console.log(star.x,star.y)
+            elstars[i].setAttribute("style",`left: ${star.x}px;top: ${star.y}px;`)//顯示星星位置塞屬性
+        }
+    }
+        //執行
+    createElement(1,"id","player","div",elPlayers);//創建腳色
+    let elstars = [];
+    createElement(5,"class","star","div",elstars);//創建星星
+    showStar()//隨機顯示星星
+    loop();//開啟循環 
+    document.addEventListener("keydown",keyDownEvent);//偵測鍵盤動作並執行keyDownEvent()
+    
+
+
+
+  
+    
+
+
+</script>
+    
+</body>
+</html>

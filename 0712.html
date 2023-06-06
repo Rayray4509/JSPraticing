@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+        <style>
+            body {
+                margin: 0;
+                background-color: #eee;
+
+            }
+            .word{
+             position: absolute;
+             width: 500px;
+             height: 500px;
+             background-color: gray;
+            }
+            
+            #player {
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                background-image: url(_3D_Ren_0110_2_.png);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                
+            }
+            .food {
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                background-image: url(BADGE.png);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-color: #2196f3;
+            }
+        </style>
+
+<body>
+
+    <div class="word"></div>
+    <script>
+
+        let word = {
+            width: 500,
+             height: 500,
+        }        
+         let player ={
+            x:0,
+            y:0,
+            speed:50,
+            width: 50,
+            height: 50,
+        };   
+        function showElment(selector,x,y){
+        let elment = document.querySelector(selector);
+            elment.style.left =x + "px";
+            elment.style.top =y + "px";
+        }
+        function rosenBridge(event){
+            if (event.code === "ArrowUp"&& player.y<player.speed){player.y = word.width-player.width;
+            }else if(event.code === "ArrowUp")   {player.y -= player.speed;}             
+            if (event.code === "ArrowDown"&& player.y>word.height-player.height-player.speed){player.y = 0;
+            }else if(event.code === "ArrowDown")   {player.y += player.speed;}
+            if (event.code === "ArrowLeft"&& player.x<player.speed ){player.x = word.height-player.height;
+            }else if (event.code === "ArrowLeft")  {player.x -= player.speed;}         
+            if (event.code === "ArrowRight"&& player.x>word.width-player.width-player.speed){player.x = 0;
+            }else if(event.code === "ArrowRight")   {player.x += player.speed;}                  
+        }
+       
+
+
+
+        let elPlayers=[];
+        function createElElement(num,attribute,elment,tag,list) {
+                
+                for (let i = 0; i < num; i++) {
+                    let divs = document.querySelector(".word");
+                    let div = document.createElement(tag);
+                    div.setAttribute(attribute, elment);                   
+                    divs.appendChild(div);                  
+                    list.push(div);
+                    
+                }
+            }
+
+            let foods = [];
+            function createFoods() {
+                for (let i = 0; i < 5; i++) {
+                    foods.push({
+                        x: 0,
+                        y: 0,
+                        width: 50,
+                        height: 50,
+                        state: false,
+                    });
+                }
+            }
+            function randomXY() {
+                for (let i = 0; i < 5; i++) {
+                    foods[i].x = Math.floor(Math.random() * (word.width + 1 - foods[i].width));
+                    foods[i].y = Math.floor(Math.random() * (word.height + 1 - foods[i].height));
+                }
+            }
+
+            let elFoods = [];
+        
+            function renderFoods() {
+                for (let i = 0; i < 5; i++) {
+                    elFoods[i].style.left = foods[i].x + 'px';
+                    elFoods[i].style.top = foods[i].y + 'px';
+
+                }
+            }
+            let collision = false
+            let collisions = []
+            function eatFood(){  
+            collisions = [];
+                for(let i=0; i<foods.length; i++) {
+                    let xx=player.x-foods[i].x
+                    let yy=player.y-foods[i].y
+                    let length = Math.sqrt(Math.pow(xx,2)+Math.pow(yy,2));            
+                    if(length < (player.width+player.speed/6)&& foods[i].state != true ){
+                       let div = document.querySelector(".word");
+                       foods[i].state = true   
+                       div.removeChild(elFoods[i]);
+                    } 
+                    collisions.push(foods[i].state);
+                }
+
+
+                
+                let counts = {};
+                for (let num of collisions) {
+                     counts[num] = counts[num] ? counts[num] + 1 : 1;      
+                 }
+                 let div = document.querySelector("#counter");
+                 div.innerHTML = `score:${+counts[false]}`;  
+                 if(counts[true]=== 5){ 
+                    randomXY();                                
+                    let divs = document.querySelector(".word");
+                     for(let i in elFoods){
+                     divs.appendChild(elFoods[i]); 
+                     console.log(elFoods);
+                     foods[i].state = false;             
+                     } 
+                     renderFoods();                                 
+                 }
+                 console.log (collisions)
+
+                 console.log(counts)
+                 console.log(elFoods)
+                 
+                }
+                
+
+                
+                                              
+            
+           let elCounters = [];
+           
+           function keydown(event){
+            rosenBridge(event);
+            showElment("#player",player.x,player.y); 
+            eatFood();        
+                           
+        }
+
+            createElElement(1,"id","counter","div",elCounters);
+            createElElement(1,"id","player","div",elPlayers);
+            createElElement(5,"class","food","div",elFoods);
+            
+            createFoods();
+            randomXY();
+           renderFoods();          
+            document.addEventListener("keydown",keydown);
+        
+        
+
+
+    
+
+
+    </script>
+    
+</body>
+</html>

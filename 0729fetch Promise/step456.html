@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紫外線指數</title>
+    <style>
+       body {
+            font-size: 1.2rem;
+            margin: 0;
+            background-color: #ccc;
+        }
+        .container {
+            max-width: 600px;
+            padding: 10px;
+            margin: auto;
+            text-align: center;
+            background-color: #d6d7d1;
+            
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container"></div>
+    <script>
+        //工具(tool)//////////////////////////////////
+        function createElement(Data,list) {
+            Data.forEach((value,key)=>{
+                let div = document.createElement("div");
+                list[key] = div;
+            })
+        }
+        //資料層(Model)///////////////////////////////
+        let data = {
+            elName:{
+                name:false,
+                el:false
+            },
+            time:{
+                time:false,
+                el:false
+            },
+            locationCode:{
+                code:[],
+                el:[]
+            },
+            ultraVioletValue:{
+                value:[],
+                el:[]
+            },
+            stationName:{
+                name:[],
+                el:[]
+            },
+            
+        }
+        let weather = fetch("ultraViolet.json").then(res=>res.json());
+        weather.then(json=>{
+            data.time.time = json.records.weatherElement.time.dataTime;
+            data.elName.name = json.records.weatherElement.elementName;
+            list = json.records.weatherElement.location
+            data.uvList = []
+            for(let i=0;i<list.length;i++){data.locationCode.code[i] = list[i].locationCode;
+                data.ultraVioletValue.value[i] = list[i].value;
+                data.uvList[i]={}
+                data.uvList[i].locationCode = list[i].locationCode;
+                data.uvList[i].value = list[i].value;
+
+            }
+            // list.forEach((value,key) => {
+            //     data.locationCode.code[key] = list[key].locationCode;
+            //     data.ultraVioletValue.value[key] = list[key].value;
+            //     data.uvList[key]={}
+            //     data.uvList[key].locationCode = list[key].locationCode;
+            //     data.uvList[key].value = list[key].value;
+            // });        
+        })
+        let weather2 = fetch("locationCode.json").then(res=>res.json())
+        weather2.then (json=>{
+            let stationList = json.records.data.stationStatus.station;
+            for(let i=0;i<data.locationCode.code.length;i++){
+                for(let j=0;j<stationList.length;j++){
+                    let stationID = stationList[j].stationID;
+                    console.log(stationID);
+                    if (data.locationCode.code[i]===stationID){
+                        data.stationName.name[i] = json.records.data.stationStatus.station[j].stationName;
+                        data.uvList[i].stationID = json.records.data.stationStatus.station[j]
+                    }
+                } 
+
+            }
+           
+            // data.locationCode.code.forEach((value,key)=>{
+            //     let stationList = json.records.data.stationStatus.station;
+            //     for(let i in stationList){
+            //         let stationID = stationList[i].stationID;
+            //         if (stationID.match(value)!=null){
+            //             data.stationName.name[key] = json.records.data.stationStatus.station[i].stationName;
+                        
+            //             data.uvList[key].stationID = json.records.data.stationStatus.station[i]
+            //         }
+            //     } 
+            // })
+        })
+        //顯示層(View)////////////////////////////////
+        Promise.all([weather,weather2]).then(()=>{
+
+            createElement(data.ultraVioletValue.value,data.ultraVioletValue.el);
+            createElement(data.locationCode.code,data.locationCode.el);
+            createElement(data.stationName.name,data.stationName.el)
+            let div = document.createElement("div");
+            data.time.el = div;
+            let el = document.createElement("div");
+            data.elName.el = el;
+            data.stationName.el.forEach((value,key)=>{value.innerText = `站台位置::${data.stationName.name[key]}`});
+            data.locationCode.el.forEach((value,key)=>{value.innerText = `站台編號::${data.locationCode.code[key]}`});
+            data.ultraVioletValue.el.forEach((value,key)=>{value.innerText = `紫外線指數::${data.ultraVioletValue.value[key]}`});
+            data.elName.el.innerText = `${data.elName.name}`
+            data.time.el.innerText = `${data.time.time}`
+
+            //以下皆為顏色樣式調整
+            data.ultraVioletValue.value.forEach((value,key)=>{
+                let count = 15-value;
+                data.locationCode.el[key].style.backgroundColor = `hsl(300deg 62% ${15+(count*4)}%)`;
+                data.ultraVioletValue.el[key].style.backgroundColor = `hsl(300deg 62% ${15+(count*4)}%)`
+                data.stationName.el[key].style.backgroundColor = `hsl(300deg 62% ${15+(count*4)}%)`
+                let radius = "10px"
+                data.stationName.el[key].style.marginTop = "5px"
+                data.stationName.el[key].style.borderTopLeftRadius = `${radius}`
+                data.stationName.el[key].style.borderTopRightRadius = `${radius}`
+                data.ultraVioletValue.el[key].style.borderBottomLeftRadius = `${radius}`
+                data.ultraVioletValue.el[key].style.borderBottomRightRadius = `${radius}`
+            })
+            data.elName.el.style.backgroundColor = "#c1cbcc"
+            data.time.el.style.backgroundColor = "#a3c5cf"
+
+
+            //執行控制(Controller)////////////////////////
+            let container = document.querySelector(".container")
+            container.appendChild(data.elName.el);
+            container.appendChild(data.time.el);
+            data.locationCode.el.forEach((value,key)=>{
+                container.appendChild(data.stationName.el[key]);
+                container.appendChild(value);
+                container.appendChild(data.ultraVioletValue.el[key]);
+            })
+        })
+    </script>
+</body>
+
+</html>

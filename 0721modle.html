@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        .player {
+                position: absolute;
+                background-image: url(_3D_Ren_0110_2_.png);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+        }
+        .food {
+            position: absolute;
+            background-image: url(BADGE.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        .arrow {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            margin: 5px;
+            background-color: #eee;
+            border: solid 1px #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let controlDirection = {
+            el:{},
+            upFn:false,
+            downFn:false,
+            leftFn:false,
+            rightFn:false,
+            setUpFn(fn){
+                if(!fn) return;
+                this.upFn = fn;
+            },
+            setDownFn(fn){
+                if(!fn) return;
+                this.downFn = fn;
+            },
+            setLeftFn(fn){
+                if(!fn) return;
+                this.leftFn = fn;
+            },
+            setRightFn(fn){
+                if(!fn) return;
+                this.rightFn = fn;
+            },
+            elTo(parent){//可以選擇想塞入的地方,若沒有預設值就直接塞入body。
+                if(!parent) parent = document.body;
+                for (let i = 0; i < Object.keys(this.el).length; i++) {
+                    let key = Object.keys(this.el)[i];
+                    let el = this.el[key];
+                    parent.appendChild(el);
+                }
+            },
+            listener(){
+                this.el.ArrowUp.addEventListener("click",this.upFn);
+                this.el.ArrowDown.addEventListener("click",this.downFn);
+                this.el.ArrowLeft.addEventListener("click",this.leftFn);
+                this.el.ArrowRight.addEventListener("click",this.rightFn);
+            },
+
+            init(){
+                this.el = {
+                    ArrowUp:document.createElement("div"),
+                    ArrowDown:document.createElement("div"),
+                    ArrowLeft:document.createElement("div"),
+                    ArrowRight:document.createElement("div"),
+                };
+                for (let i = 0; i < Object.keys(this.el).length; i++) {
+                    let key = Object.keys(this.el)[i];
+                    let el = this.el[key];
+                    el.classList.add("arrow");
+                    el.classList.add(key);
+                };
+                document.addEventListener("keydown",(e) => {
+                    if(e.code === "ArrowUp") this.upFn();
+                    if(e.code === "ArrowDown") this.downFn();
+                    if(e.code === "ArrowLeft")this.leftFn();
+                    if(e.code === "ArrowRight")this.rightFn();
+                });
+                this.elTo();
+                this.listener();
+            }
+
+        }
+
+
+        let player = {
+            width:50,
+            heigt:50,
+            x:0,
+            y:0,
+            speed:50,
+            el:false,
+            set(x){
+                if (typeof x !=="number") return;
+                this.x = x;
+            },
+            set(y){
+                if (typeof y !=="number") return;
+                this.y = y;
+            },
+            init() {
+                this.el = document.createElement("div");
+                this.el.classList.add("player");
+                this.style.width = this.width + "px";
+                this.el.style.height = this.heigt + "px";
+                this.appenTo();
+            },
+            appenTo(){
+                if (!parent) parent = document.body;
+                parent.appendChild(this.el);
+            },
+            render(){
+                this.el.style.left = this.x +"px";
+                this.el.style.top = this.y +"px";
+            }
+        }
+
+        //執行
+        controlDirection.setUpFn(function(){
+            console.log("上功能");
+        });
+        controlDirection.setDownFn(function(){
+            console.log("下功能");
+        });
+        controlDirection.setLeftFn(function(){
+            console.log("左功能");
+        });
+        controlDirection.setRightFn(function(){
+            console.log("右功能");
+        });
+        controlDirection.init();
+
+
+
+
+    </script>
+    
+</body>
+</html>

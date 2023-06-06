@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id = "btn" style=" font-size: larger;">啟動</button>
+    
+    <script>
+
+
+        let fruit = ["西瓜","草莓","香蕉","流連","水蜜桃"];
+        let containers = ["杯子","碗","碟子"];
+        let product = [];
+        let num = [3,4]
+        
+        botton = document.getElementById("btn");
+        function getRandomNum(){
+        let randNum = [Math.floor(Math.random() * num.length)];
+        return num[randNum];
+        ;}
+        
+
+        function getRandomFood(){
+        let rand = [Math.floor(Math.random() * fruit.length)];
+        return fruit[rand]};
+        
+        function getRandomContainers(){
+        let rand = [Math.floor(Math.random() * containers.length)];
+        return containers[rand]};
+        let getRandomFoods=getRandomFood();
+        
+
+        function factory(){if(getRandomContainers() === "杯子") {
+            
+            product.push(getRandomFoods + "汁")
+            
+        } else if(getRandomContainers() === "碗"){
+            
+            product.push(getRandomFoods + "冰");
+        } else if(getRandomContainers() === "碟子"){
+            product.push(getRandomFoods +"泥");
+        }};
+        botton.addEventListener("click", function(){
+            getRandomNum();
+            getRandomFood();
+            
+            
+
+        
+
+
+         if (getRandomNum()===3) {
+            
+                
+               factory();
+      
+                factory();
+      
+                factory();
+                console.log(getRandomNum());
+            
+         console.log(product);}
+      
+            
+     
+            
+         else {
+
+            getRandomNum();
+            factory();
+            factory();
+            factory();
+            factory();
+      
+            
+            console.log(getRandomNum());
+            
+        console.log(product)}
+
+            
+        });
+      
+        
+   
+  
+    
+
+
+     
+
+
+     
+
+
+    </script>
+    
+</body>
+</html>

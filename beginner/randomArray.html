@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        .world {
+            position: absolute;
+            background-color: #eee;
+        }
+
+        .player {
+            position: absolute;
+            background-image: url(wa.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        @keyframes star {
+            0% {
+            transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .food {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-image: url(star.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            animation:star 1s infinite alternate;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="score"></div>
+    <div class="world"></div>
+    <script>
+        /*執行addRandomNumber
+        基數為三個亂數組[4,7,6]
+        偶數為兩個亂數組[2,8]
+        不能重複值[2,2]
+        */
+
+        /*
+        判斷即將push的key是偶數還是基數
+        如果偶數迴圈跑2次.基數則3次
+        隨機不重複數字.如重複重新產生隨機數
+        push到arr
+
+        ex:
+        arr = [
+            [5,2],
+            [2,7,5],
+            [7,5],
+            [4,3,6],
+        ];
+        */
+        let arr = [];
+        function randomNumber() {
+            return Math.floor(Math.random() * 10);
+        }
+        function randomArrayNumber(length) {
+            let ary = [];
+            for (let i = 0; i < length; i++) {
+                let num = randomNumber();
+                ary.push(num);
+            }
+            return ary;
+        }
+        function checkCollision(ary) {
+            for (let i = 0; i < arr.length; i++) {
+                if(ary.length !== arr[i].length) continue;
+
+                let collisionCount = 0;
+                for (let x = 0; x < ary.length; x++) {
+                    if(ary[x] === arr[i][x]){
+                        collisionCount++;
+                    }
+                }
+                if(collisionCount === ary.length){
+                    return true;
+                }
+            }
+            return false;
+        }
+        function addRandomNumber() {
+            let length = 3;
+            if(arr.length%2 === 0){//偶數
+                length = 2;
+            }
+
+            let ary = randomArrayNumber(length);
+            let isCollision = checkCollision(ary);
+            if(isCollision){
+                console.log('重複了');
+                console.log(ary);
+            }else{
+                arr.push(ary);
+                console.log(arr);
+            }
+            
+        }
+        
+    </script>
+</body>
+
+</html>

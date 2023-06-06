@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+        <style>
+            body {
+                margin: 0;
+                background-color: #eee;
+
+            }
+            .word{
+             position: absolute;
+             width: 500px;
+             height: 500px;
+             background-color: gray;
+            }
+            
+            #player {
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                background-image: url(_3D_Ren_0110_2_.png);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                
+            }
+            .food {
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                background-image: url(BADGE.png);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-color: #2196f3;
+            }
+        </style>
+
+<body>
+
+    <div class="word"></div>
+    <!-- /<div id="player"></div>    -->
+    <script>
+
+        let word = {
+            width: 500,
+             height: 500,
+        }
+         let player ={
+            x:0,
+            y:0,
+            speed:10,
+            width: 50,
+            height: 50,
+        };
+    
+        function showElment(selector,x,y){
+        let elment = document.querySelector(selector);
+            elment.style.left =x + "px";
+            elment.style.top =y + "px";
+        }
+        let upp = 0
+        let dwn = 0
+        let lef = 0
+        let rig = 0
+     
+
+        function up(){if ( player.y<player.speed){player.y = word.width-player.width;
+        }else  {player.y -= player.speed;}
+        showElment("#player",player.x,player.y)
+        upp = setTimeout(up,500);
+        console.log("up");}
+        function down(){
+        if (player.y>word.height-player.height-player.speed){player.y = 0;
+        }else{player.y += player.speed;}
+        showElment("#player",player.x,player.y)
+        dwn = setTimeout(down,500);
+        console.log("down")}
+
+        function left(){if ( player.x<player.speed ){player.x = word.height-player.height;
+        }else  {player.x -= player.speed;}
+        showElment("#player",player.x,player.y)
+        lef = setTimeout(left,500);
+        console.log("left")
+    }
+        function right(){ if (player.x>word.width-player.width-player.speed){player.x = 0;
+        }else{player.x += player.speed;} 
+        rig = showElment("#player",player.x,player.y)
+        lef = setTimeout(right,500);
+        console.log("right");}
+        
+    
+
+         let timeouts=[upp,dwn,lef,rig,]
+
+        function repeatMove(event){
+        //  var highestTimeoutId = setTimeout(";");
+        //  for (var i = 0 ; i < highestTimeoutId ; i++) {
+        //      clearTimeout(i);
+        //  }
+        // for (let i = 0; i<timeouts.length ;i++){
+        //     clearTimeout(timeouts[i]);
+        // } 
+             clearTimeout(upp);
+             clearTimeout(dwn);
+             clearTimeout(lef);
+             clearTimeout(rig);
+
+        if (event.code === "ArrowUp"){up();}
+        else if (event.code === "ArrowDown"){down();}
+        else if (event.code === "ArrowLeft"){left();}
+        else if (event.code === "ArrowRight"){right();}
+
+        }
+
+
+        
+        function keydown(event){
+        
+            console.log(player.x,player.y); 
+            repeatMove(event);
+            console.log(timeouts)                 
+        }
+
+
+
+        let elPlayers=[];
+        function createElement(num,attribute,elment,tag,list) {
+                for (let i = 0; i < num; i++) {
+                    let divs = document.querySelector(".word");
+                    let div = document.createElement(tag);
+                    div.setAttribute(attribute, elment);                   
+                    divs.appendChild(div);                  
+                    list.push(div);
+                    console.log(div)
+                }
+            }
+            createElement(1,"id","player","div",elPlayers);
+            
+        
+        document.addEventListener("keydown",keydown);
+        
+        //預設腳色座標資料庫
+        //獲取鍵盤按下資訊(addEventListener)
+        //設定按下鍵盤改變角色位置px數量
+        //透過判斷來根據鍵盤資訊改變角色座標資料庫中的x,y,speed
+        //分別需要判斷鍵盤的上下左右寫出4個判斷式
+        //按下其中一個鍵時需要將預設速度加入角色資料庫中的x或是y
+        //使用querySeletor獲取角色DIV區塊(class用.id用#)
+        //使用角色資料庫中的x更改角色的style.left來顯示網頁畫面中的橫軸位置
+        //使用角色資料庫中的x更改角色的style.top來顯示網頁畫面中的綜軸位置
+        //限制邊界上左為0px
+        //限制下右邊界各500px
+        //考慮腳色像素限制邊界(-px)
+        //函數抽離整理code
+    
+
+
+    
+
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+         .container {
+            max-width: 600px;
+            padding: 10px;
+            margin: auto;
+            text-align: center;
+            background-color: #d6d7d1;
+            height: auto;
+            
+        }
+        body {
+            margin: 0;
+        }
+        .item {
+            border-color: black;
+            border-width:1px; 
+            border-style:solid;
+            background-color: #ccc;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 100px;
+            height: 100px;
+            display: inline-flex;
+            margin: auto;
+        }
+        .btn{
+        background-image: linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+        border-radius: 8px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        flex-shrink: 0;
+        font-family: "Inter UI","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        height: 4rem;
+        padding: 0 1.6rem;
+        text-align: center;
+        line-height:65px;
+        text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+        transition: all .5s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        margin: 10px;
+        }
+        .btn:hover {
+        box-shadow: rgba(80, 63, 205, 0.5) 0 1px 30px;
+        transition-duration: .1s;
+        }
+        @media (min-width: 768px) {
+        .btn {
+            padding: 0 2.6rem;
+        }
+        }
+    </style>
+</head>
+<body>
+    <div class="container"></div>
+    <script>
+        let item = ["紅葡萄酒","白葡萄酒","威士忌","啤酒","清酒"];
+        let itemImage = ["紅葡萄酒.png","白葡萄酒.png","威士忌.png","一番搾.png","清酒.png"]
+        let defaultImage  = "0926.jpg_wh860.jpg";
+
+        function randomItem(){
+            let randomKey = [Math.floor(Math.random() * item.length)];
+            return item[randomKey];
+        }
+        let result = [];
+        function runResult(){
+            for(let i = 0;i<3; i++){
+                result[i] = randomItem();
+            }
+        }
+
+        function checkResult(){
+            let count = 0;
+            for(let i = 0; i<result.length-1;i++){
+                if(result[i]===result[i+1])count++;
+            }
+            if (count==2) return true; 
+            else return false;
+        }
+        let container = document.body.querySelector(".container")
+
+        let wineEl = [];
+       function createElement(){
+        for(let i in result){
+            div = document.createElement("div");
+            wineEl[i] = div;
+            div.classList.add("item");
+            wineEl[i].style.backgroundImage = `url(${defaultImage})`; 
+            container.appendChild(div);
+        }
+       }
+       function changeWineImage(i) {
+            wineEl[i].style.backgroundImage = `url(${itemImage[item.indexOf(result[i])]})`;
+       }
+       let btnEl = false;
+       function createButton() {
+        div = document.createElement("div");
+        btnEl = div;
+        div.classList.add("btn");
+        div.innerText ="開始"
+        container.appendChild(div);
+       }
+       let eventEl = false;
+       function createRusult(){
+        div = document.createElement("div");
+        eventEl = div;
+        div.classList.add("btn");
+        div.innerText =`${event[key]}`
+        container.appendChild(div);
+       }
+
+       let event = ["請按下開始","輸","贏"]
+       let key = 0;
+
+       function eventChange(){
+        if(checkResult()===true) key = 2;
+        if(checkResult()===false) key = 1; 
+        eventEl.innerText =`${event[key]}`
+       }
+
+      class timer {
+        constructor(){
+            this.count = 0;
+            this.speed = 10;
+            this.s = 5
+            this.startChange = false
+            this.isLoop = false;
+            this.isstart = false;
+        }
+        
+        start(i){
+            runResult();
+            changeWineImage(i);
+            checkResult();
+            eventEl.innerText =`計算中`
+            this.isstart = true
+            this.startChange = setTimeout(()=>{this.start(i)},this.speed)
+        }
+        init(){
+            clearTimeout(this.startChange);
+            this.count = 0;
+            this.speed = 10;
+            this.isLoop = false;
+            this.isstart = false;
+        }
+        doTimer(i){
+            if (this.count === this.s) {
+                eventChange();
+               this.init();
+                return
+            }
+            if(this.isstart === false) this.start(i);
+            this.isLoop = true
+            this.count++;
+            this.speed*=2;
+            console.log(this.count);
+            setTimeout(()=>{this.doTimer()},1000)
+        }
+
+      }
+      let one = new timer();
+
+      let two = new timer();
+
+      let three = new timer();
+     
+
+
+        runResult()
+        checkResult()
+        createElement()
+        createButton()
+        createRusult()
+       
+        btnEl.addEventListener("click",()=>{
+            one.doTimer(0)
+            setTimeout(()=>{two.doTimer(1)},500)
+            setTimeout(()=>{three.doTimer(2)},1000)
+            
+        })
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+        <style>
+            body{
+                margin: 0;
+            }
+            #user{
+                width: 50px;
+                height: 50px;
+                background-image: url(_3D_Ren_0110_2_.png);
+                position: absolute;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-color: cadetblue;
+            }
+            .food{
+                width:50px;
+                height: 50px;
+                background-image: url(BADGE.png);
+                position: absolute;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-color: rgb(160, 95, 104);
+            }
+        </style>
+</head>
+<body>
+    <div id="user"></div>
+    <!-- <div class="food" id ="food1"></div>
+    <div class="food" id ="food2"></div>
+    <div class="food" id ="food3"></div>
+    <div class="food" id ="food4"></div>
+    <div class="food" id ="food5"></div> -->
+  
+    <script>
+        
+        let user ={
+            x:0,
+            y:0,
+            speed:10,
+        };
+        let food ={
+             x:0,
+             y:0,
+        };
+
+        function foodPRandom(){
+             food.x = Math.floor(Math.random() * (window.innerWidth-80));
+             food.y = Math.floor(Math.random() * (window.innerHeight-100));
+        }
+        function foodData(){
+            foodPRandom();                          
+        }
+
+        function showElment(selector,x,y){
+            let elment = document.querySelector(selector);
+            elment.style.left =x + "px";
+            elment.style.top =y + "px";
+        }
+
+        function cahrCoordinateData(event){           
+            if (event.code === "ArrowUp" && user.y>0 ) user.y -= user.speed;
+            if (event.code === "ArrowDown"  ) user.y += user.speed;     
+            if (event.code === "ArrowLeft" && user.x>0 )user.x -= user.speed;
+            if (event.code === "ArrowRight"  )user.x += user.speed;    
+                                 
+        };
+                 
+        function eatFood(){
+            let xx=user.x-food.x
+            let yy=user.y-food.y
+            let length = Math.sqrt(Math.pow(xx,2)+Math.pow(yy,2));
+                          
+            if(length< 50+user.speed ){
+                foodData(); 
+                showElment("#food1",food.x,food.y)          
+            }             
+              console.log(length);
+            
+        };
+
+        function keydown(event){
+            cahrCoordinateData(event);
+            showElment("#user",user.x,user.y);
+            
+            eatFood();
+            showElment("#food1",food.x,food.y);   
+            
+            // if (event.code === "KeyA"  ){
+            //     for(i=1; i<10+1; i++){
+            //     trash = document.getElementById(`food${+i}`)
+            //     trash.remove();              
+            //     }
+            //     foodShowNmu(10);
+
+            // }
+                   
+        };
+        let foods =[]
+        function createFoods(){
+            for (let i = 0; i<5; i++){
+                foods.push({
+                    x:0,
+                    y:0,
+                    width:0,
+                    height:0,
+
+                })
+            }
+        }
+        let elFoods=[];
+        function foodShowNmu(num){
+            for(i=1; i<num+1; i++){
+             const div = document.createElement("div");            
+             div.setAttribute("class", `food`);
+             div.setAttribute("id", `food${+i}`);
+             document.body.appendChild(div);
+             elFoods.push(div)
+             document.body.appendChild(div)
+              foodData();
+              div.style.left =food.x + "px";
+              div.style.top =food.y + "px";
+                 showElment(`#food${i}`,food.x,food.y);                         
+            }
+        }
+    
+        
+        foodShowNmu(10);
+        console.log(allDiv);
+        
+
+    
+        
+        document.addEventListener("keydown",keydown);
+    </script>
+    
+</body>
+</html>

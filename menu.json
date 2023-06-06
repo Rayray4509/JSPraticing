@@ -1,0 +1,18 @@
+{
+    "statusCode":200,
+    "message":"讀取成功",
+    "data":[
+    {
+            "title":"新聞",
+            "href":"https://tw.news.yahoo.com/"
+        },
+        {
+            "title":"股市",
+            "href":"https://tw.stock.yahoo.com/"
+        },
+        {
+            "title":"理財",
+            "href":"https://tw.stock.yahoo.com/fund/"
+        }
+    ]
+}

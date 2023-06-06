@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+      // let arr = [];
+      // let ex = {}
+      // function addRandomNumber(){
+      //   let randomNumber = Math.floor(Math.random()* 10);
+      //   for (let num of arr) {
+      //     ex[num] = ex[num] ? ex[num] + 1 : 1;      
+      //   }
+      //   console.log(arr);
+      //   if(typeof(ex[randomNumber])==="undefined"){arr.push(randomNumber);}
+      //   else {console.log("重複位置"+arr.indexOf(randomNumber));}
+      //   console.log("隨機數"+randomNumber)
+      // }
+      
+      // document.addEventListener("keydown",addRandomNumber)
+      
+      //隨機素
+      //2,3唯一組
+      //不能重複
+      //機偶素
+
+      let arr = [];
+      let x = []
+      let y = []
+      function addRandomNumber(){     
+        return Math.floor(Math.random()* 10);
+        console.log(addRandomNumber)
+      }
+
+
+      function test(){
+
+      while(x.length<2){
+        let rand = addRandomNumber();
+        if(rand%2===0)x.push(rand);
+      }
+      if(x.length===2){
+      if(x[0]!=x[1])arr.push(x);
+      x=[];
+    }
+
+
+    // while(y.length<3){
+    //     let rand = addRandomNumber();
+    //     if(rand%2!=0)x.push(rand);
+    //   }
+    //   if(x.length===3){
+    //     if(y[0]!=y[1]&&y[0]!=y[2]&&y[1]!=y[2])arr.push(y);
+    //   y=[];
+    // }
+
+     
+      //   addRandomNumber();
+      // if(addRandomNumber%2!=0)y.push(addRandomNumber)   
+      // if(y.length===3)if(y[0]!=y[1]&&y[0]!=y[2]&&y[1]!=y[2])arr.push(y);
+      
+
+      console.log(arr)
+      
+      //console.log(y)
+    }
+    
+
+     
+      
+      
+      
+         
+
+        
+         
+         
+        
+         
+         
+         
+         
+         
+        
+        document.addEventListener("keydown",test)
+      
+       
+     
+
+
+        // let ary = [5,8,3,54,16,88,42,79];
+        // function getRadomKey(){
+        //     return (Math.floor(Math.random() * ary.length));
+        // }
+        // let value = ary[getRadomKey()];
+        // console.log(value);
+
+     //取得隨機一個key
+     //隨機取得3||4
+     //隨機取得3~4樣水果
+        // let fruits = ["西瓜","草莓","香蕉","流連","水蜜桃"];
+        // let picks = [3,4];
+
+        // function getRandomKey(ra){
+        // return (Math.floor(Math.random() * ra.length));
+        // }
+        // let materials =[]
+        // let a = picks[getRandomKey(picks)]//做註解方便使用
+
+        // for(i=0;i<a;i++){
+    
+        // materials.push(fruits[getRandomKey(fruits)]);
+        
+        // }
+        // document.write(materials);
+
+    </script>
+    
+</body>
+</html>

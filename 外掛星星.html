@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #eee;
+
+        }
+        .world{
+         position: absolute;
+         width: 500px;
+         height: 500px;
+         background-color: gray;
+        }
+        
+        #player {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url(_3D_Ren_0110_2_.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            
+        }
+        .star {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url(BADGE.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-color: #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let star = {
+            x:0,
+            y:0,
+            width: 50,
+            height: 50,
+            state:false,
+            el:false,
+
+            init:function(){
+                this.el = document.createElement("div");
+                this.el.setAttribute("class", "star");                  
+                document.body.appendChild(this.el);
+            },
+            starRandom:function (){
+             this.x = Math.floor(Math.random() * (window.innerWidth-this.width+1));
+             this.y = Math.floor(Math.random() * (window.innerHeight-this.height+1));
+            },
+            render:function(){
+                this.el.setAttribute("style",`left: ${this.x}px;top: ${this.y}px`) 
+            }
+        }
+
+
+        star.init();
+        star.starRandom();
+        star.render();
+    </script>
+    
+</body>
+</html>
